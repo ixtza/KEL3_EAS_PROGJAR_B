@@ -1,0 +1,7 @@
+# Ignore
+eas_kel3_env/**/*
+tmp/**/*
+
+# Allow
+!eas_kel3_env/requirements.txt
+!eas_kel3_env/README.MD
