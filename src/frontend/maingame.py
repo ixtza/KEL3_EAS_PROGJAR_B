@@ -24,6 +24,17 @@ arenaY = 0
 def Arena(x,y):
 	screen.blit(arenaImg,(x,y))
 
+#players
+player1Img = pygame.image.load(work_dir+"/assets/player/player1.png")
+player1X = 0
+player1Y = 320
+
+def Player1(x,y):
+	screen.blit(player1Img,(x,y))
+
+#keyboard
+pressed = False
+
 #energys and breaks
 illegal_place = [(5,5)]
 
@@ -101,6 +112,32 @@ while running:
 	screen.fill((0,255,0))
 
 	Arena(arenaX,arenaY)
+		
+	if event.type == pygame.KEYDOWN and pressed == False:
+		pressed = True
+		if event.key == pygame.K_LEFT:
+			player1X = player1X - 32
+		if event.key == pygame.K_RIGHT:
+			player1X = player1X + 32
+		if event.key == pygame.K_UP:
+			player1Y = player1Y - 32
+		if event.key == pygame.K_DOWN:
+			player1Y = player1Y + 32
+
+	if player1X < 0:
+		player1X = 0
+	if player1X > 352:
+		player1X = 352
+	if player1Y < 0:
+		player1Y = 352
+	if player1Y > 352:
+		player1Y = 352
+
+	if event.type == pygame.KEYUP:
+		pressed = False
+
+	Player1(player1X,player1Y)
+
 	for i in range(num_of_breaks):
 		Break(breakX[i], breakY[i], i)
 	
