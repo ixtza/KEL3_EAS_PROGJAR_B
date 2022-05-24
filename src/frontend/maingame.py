@@ -1,5 +1,9 @@
 import pygame
 import random
+import os 
+
+#working directory path
+work_dir = os.path.dirname(os.path.realpath(__file__))
 
 #initialize the pygame
 pygame.init()
@@ -9,11 +13,11 @@ screen = pygame.display.set_mode((352,416))
 
 #title and icon
 pygame.display.set_caption("Tap Treasure")
-icon = pygame.image.load("assets/icon/treasure.png")
+icon = pygame.image.load(work_dir+"/assets/icon/treasure.png")
 pygame.display.set_icon(icon)
 
 #arena
-arenaImg = pygame.image.load("assets/arena/arena.png")
+arenaImg = pygame.image.load(work_dir+"/assets/arena/arena.png")
 arenaX = 0
 arenaY = 0
 

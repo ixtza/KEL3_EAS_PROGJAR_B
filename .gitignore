@@ -1,6 +1,7 @@
 # Ignore
 eas_kel3_env/**/*
 tmp/**/*
+src/frontend/model/
 
 # Allow
 !eas_kel3_env/requirements.txt
