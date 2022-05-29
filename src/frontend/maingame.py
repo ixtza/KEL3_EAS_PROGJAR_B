@@ -1,6 +1,7 @@
 import pygame
 import random
 import os 
+import model
 
 #working directory path
 work_dir = os.path.dirname(os.path.realpath(__file__))
@@ -25,12 +26,45 @@ def Arena(x,y):
 	screen.blit(arenaImg,(x,y))
 
 #players
-player1Img = pygame.image.load(work_dir+"/assets/player/player1.png")
+# player1Img = pygame.image.load(work_dir+"/assets/player/player1.png")
+player1Img = pygame.image.load(work_dir+"/assets/model/model_move.png").convert_alpha()
 player1X = 0
 player1Y = 320
 
-def Player1(x,y):
+spriteModel = model.SpriteModel(player1Img)
+player_animation_list = [[]]
+player_animation_movement = 4
+player_animation_steps = 7
+frame = 0
+
+def Player1(x,y,move):
 	screen.blit(player1Img,(x,y))
+	move = 32
+	if move == pygame.K_LEFT:
+		frame = 2
+		for s in range(player_animation_steps):
+			# screen.blit(player1Img,(x,y))
+			screen.blit(player_animation_list[s][frame], (x,y))
+	if move == pygame.K_RIGHT:
+		frame = 1
+		for x in range(player_animation_steps):
+			# screen.blit(player1Img,(x,y))
+			screen.blit(player_animation_list[s][frame], (x,y))
+	if move == pygame.K_UP:
+		frame = 3
+		for x in range(player_animation_steps):
+			# screen.blit(player1Img,(x,y))
+			screen.blit(player_animation_list[s][frame], (x,y))
+	if move == pygame.K_DOWN:
+		frame = 0
+		for x in range(player_animation_steps):
+			# screen.blit(player1Img,(x,y))
+			screen.blit(player_animation_list[s][frame], (x,y))
+
+for x in range(player_animation_steps):
+	player_animation_list.append([])
+	for y in range(player_animation_movement):
+		(player_animation_list[x]).append(spriteModel.get_image(x,y,32,32,10,(0,0,0)))
 
 #keyboard
 pressed = False
@@ -126,17 +160,17 @@ while running:
 
 	if player1X < 0:
 		player1X = 0
-	if player1X > 352:
-		player1X = 352
+	if player1X > 320:
+		player1X = 320
 	if player1Y < 0:
-		player1Y = 352
-	if player1Y > 352:
-		player1Y = 352
+		player1Y = 0
+	if player1Y > 320:
+		player1Y = 320
 
 	if event.type == pygame.KEYUP:
 		pressed = False
 
-	Player1(player1X,player1Y)
+	Player1(player1X,player1Y,event.key)
 
 	for i in range(num_of_breaks):
 		Break(breakX[i], breakY[i], i)

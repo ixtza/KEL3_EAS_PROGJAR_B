@@ -2,6 +2,7 @@
 eas_kel3_env/**/*
 tmp/**/*
 src/frontend/model/
+tests/frontend/model/
 
 # Allow
 !eas_kel3_env/requirements.txt
