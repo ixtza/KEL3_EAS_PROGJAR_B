@@ -1,10 +1,10 @@
+from re import L
 import pygame
-import random
 
 #importing game classes
 import Player
-import Break
-import Energy
+import Arena
+import GameController
 
 import os 
 import model
@@ -24,65 +24,18 @@ icon = pygame.image.load(work_dir+"/assets/icon/treasure.png")
 pygame.display.set_icon(icon)
 
 #arena
-arenaImg = pygame.image.load(work_dir+"/assets/arena/arena.png")
-arenaX = 0
-arenaY = 0
-
-def Arena(x,y):
-	screen.blit(arenaImg,(x,y))
+arena = Arena.Arena(pygame.image.load(work_dir+"/assets/arena/arena.png"), 0, 0)
+arena.generate_map()
 
 #players
-player1 = Player.Player(pygame.image.load(work_dir+"/assets/player/player1.png"), 0, 320)
+players = []
+players.append(Player.Player(pygame.image.load(work_dir+"/assets/player/player1.png"), 0, 0, 320))
+players.append(Player.Player(pygame.image.load(work_dir+"/assets/player/player2.png"), 1, 0, 0))
+players.append(Player.Player(pygame.image.load(work_dir+"/assets/player/player3.png"), 2, 320, 0))
+players.append(Player.Player(pygame.image.load(work_dir+"/assets/player/player4.png"), 3, 320, 320))
 
-#keyboard
-pressed = False
-
-#energys and breaks
-illegal_place = [(5,5)]
-
-#break
-breaks = []
-energys = []
-num_of_breaks = 12
-num_of_energys = 12
-
-for i in range(num_of_breaks):
-	randX = 5
-	randY = 5
-	while (randX,randY) in illegal_place:
-		if i < 3:
-			randX = random.randint(1,5)
-			randY = random.randint(1,5)
-		elif i < 6:
-			randX = random.randint(5,9)
-			randY = random.randint(1,5)
-		elif i < 9:
-			randX = random.randint(1,5)
-			randY = random.randint(5,9)
-		elif i < 12:
-			randX = random.randint(5,9)
-			randY = random.randint(5,9)
-	breaks.append(Break.Break(pygame.image.load(work_dir+"/assets/break/break.png"), randX*32, randY*32))
-	illegal_place.append((randX,randY))
-
-for i in range(num_of_energys):
-	randX = 5
-	randY = 5
-	while (randX,randY) in illegal_place:
-		if i < 3:
-			randX = random.randint(1,5)
-			randY = random.randint(1,5)
-		elif i < 6:
-			randX = random.randint(5,9)
-			randY = random.randint(1,5)
-		elif i < 9:
-			randX = random.randint(1,5)
-			randY = random.randint(5,9)
-		elif i < 12:
-			randX = random.randint(5,9)
-			randY = random.randint(5,9)
-	energys.append(Energy.Energy(pygame.image.load(work_dir+"/assets/energy/energy.png"), randX*32, randY*32))
-	illegal_place.append((randX,randY))
+#gamecontroller
+gamecontroller = GameController.GameController(0)
 
 #gameloop
 running = True
@@ -90,41 +43,42 @@ while running:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			running = False
+		
+		#Check input for specific player
+		player = players[gamecontroller.getturn()]
+		changeTurn = player.check_movement(event)
+		#If any valid input from player
+		if changeTurn:
+			player.setPoint(player.getPoint() - 1)
+			#check for break, energy, and finish
+			for brk in arena.getBreaks():
+				if player.getX() == brk.getX() and player.getY() == brk.getY():
+					gamecontroller.addEliminated(gamecontroller.getturn())
+			for energy in arena.getEnergys():
+				if player.getX() == energy.getX() and player.getY() == energy.getY():
+					player.setPoint(player.getPoint() + 5)
+			if player.getX() == 160 and player.getY() == 160:
+				gamecontroller.addEliminated(gamecontroller.getturn())
+			
+			#check if all players is finished
+			if (len(gamecontroller.getEliminated())	 > 3):
+				maxpoint = -999999
+				winner = 0
+				for player in players:
+					if player.getPoint() > maxpoint:
+						maxpoint = player.getPoint()
+						winner = player.getId()+1
+				print("Player"+str(winner)+" Win!")
+				running=False
+
+			gamecontroller.nextturn()
 
 	#RGB Red, Green, Blue
 	screen.fill((0,255,0))
 
-	Arena(arenaX,arenaY)
-		
-	if event.type == pygame.KEYDOWN and pressed == False:
-		pressed = True
-		if event.key == pygame.K_LEFT:
-			player1.x = player1.x - 32
-		if event.key == pygame.K_RIGHT:
-			player1.x = player1.x + 32
-		if event.key == pygame.K_UP:
-			player1.y = player1.y - 32
-		if event.key == pygame.K_DOWN:
-			player1.y = player1.y + 32
+	arena.print(screen)
 
-	if player1.x < 0:
-		player1.x = 0
-	if player1.x > 352:
-		player1.x = 352
-	if player1.y < 0:
-		player1.y = 352
-	if player1.y > 352:
-		player1.y = 352
-
-	if event.type == pygame.KEYUP:
-		pressed = False
-
-	player1.print(screen)
-
-	for i in range(num_of_breaks):
-		breaks[i].print(screen)
-	
-	for i in range(num_of_energys):
-		energys[i].print(screen)
+	for player in players:
+		player.print(screen)
 
 	pygame.display.update()

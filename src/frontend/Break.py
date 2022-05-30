@@ -1,3 +1,6 @@
+from re import X
+
+
 class Break:
 	def __init__(self, img, x, y):
 		self.img = img
@@ -6,3 +9,9 @@ class Break:
 
 	def print(self, screen):
 		screen.blit(self.img,(self.x, self.y))
+
+	def getX(self):
+		return self.x
+	
+	def getY(self):
+		return self.y
