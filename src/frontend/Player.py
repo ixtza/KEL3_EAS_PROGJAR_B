@@ -1,5 +1,6 @@
 import pygame
 
+
 class Player:
 
 	point = 7
@@ -11,9 +12,9 @@ class Player:
 		self.y = y
 
 	def print(self, screen):
-		screen.blit(self.img,(self.x, self.y))
+		screen.blit(self.img, (self.x, self.y))
 
-	def move(self,x,y):
+	def move(self, x, y):
 		self.x = self.x + x
 		self.y = self.y + y
 
@@ -22,13 +23,13 @@ class Player:
 		if event.type == pygame.KEYDOWN and pressed == False:
 			pressed = True
 			if event.key == pygame.K_LEFT:
-				self.move(-32,0)
+				self.move(-32, 0)
 			if event.key == pygame.K_RIGHT:
-				self.move(32,0)
+				self.move(32, 0)
 			if event.key == pygame.K_UP:
-				self.move(0,-32)
+				self.move(0, -32)
 			if event.key == pygame.K_DOWN:
-				self.move(0,32)
+				self.move(0, 32)
 			if self.isOutsideArea():
 				return False
 			return True
@@ -62,7 +63,7 @@ class Player:
 
 	def getX(self):
 		return self.x
-	
+
 	def getY(self):
 		return self.y
 
