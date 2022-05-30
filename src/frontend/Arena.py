@@ -68,3 +68,9 @@ class Arena:
 					randY = random.randint(5,9)
 			self.breaks.append(Break.Break(pygame.image.load(work_dir+"/assets/break/break.png"), randX*32, randY*32))
 			self.illegal_place.append((randX,randY))
+
+	def getBreaks(self):
+		return self.breaks
+	
+	def getEnergys(self):
+		return self.energys

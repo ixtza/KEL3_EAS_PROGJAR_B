@@ -1,8 +1,10 @@
+from re import L
 import pygame
 
 #importing game classes
 import Player
 import Arena
+import GameController
 
 import os 
 
@@ -25,10 +27,14 @@ arena = Arena.Arena(pygame.image.load(work_dir+"/assets/arena/arena.png"), 0, 0)
 arena.generate_map()
 
 #players
-player1 = Player.Player(pygame.image.load(work_dir+"/assets/player/player1.png"), 0, 320)
+players = []
+players.append(Player.Player(pygame.image.load(work_dir+"/assets/player/player1.png"), 0, 0, 320))
+players.append(Player.Player(pygame.image.load(work_dir+"/assets/player/player2.png"), 1, 0, 0))
+players.append(Player.Player(pygame.image.load(work_dir+"/assets/player/player3.png"), 2, 320, 0))
+players.append(Player.Player(pygame.image.load(work_dir+"/assets/player/player4.png"), 3, 320, 320))
 
-#keyboard
-pressed = False
+#gamecontroller
+gamecontroller = GameController.GameController(0)
 
 #gameloop
 running = True
@@ -36,16 +42,42 @@ while running:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			running = False
-		player1.check_movement(event)
-	
+		
+		#Check input for specific player
+		player = players[gamecontroller.getturn()]
+		changeTurn = player.check_movement(event)
+		#If any valid input from player
+		if changeTurn:
+			player.setPoint(player.getPoint() - 1)
+			#check for break, energy, and finish
+			for brk in arena.getBreaks():
+				if player.getX() == brk.getX() and player.getY() == brk.getY():
+					gamecontroller.addEliminated(gamecontroller.getturn())
+			for energy in arena.getEnergys():
+				if player.getX() == energy.getX() and player.getY() == energy.getY():
+					player.setPoint(player.getPoint() + 5)
+			if player.getX() == 160 and player.getY() == 160:
+				gamecontroller.addEliminated(gamecontroller.getturn())
+			
+			#check if all players is finished
+			if (len(gamecontroller.getEliminated())	 > 3):
+				maxpoint = -999999
+				winner = 0
+				for player in players:
+					if player.getPoint() > maxpoint:
+						maxpoint = player.getPoint()
+						winner = player.getId()+1
+				print("Player"+str(winner)+" Win!")
+				running=False
+
+			gamecontroller.nextturn()
+
 	#RGB Red, Green, Blue
 	screen.fill((0,255,0))
 
 	arena.print(screen)
 
-	if event.type == pygame.KEYUP:
-		pressed = False
-
-	player1.print(screen)
+	for player in players:
+		player.print(screen)
 
 	pygame.display.update()
