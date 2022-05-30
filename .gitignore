@@ -2,7 +2,7 @@
 eas_kel3_env/**/*
 tmp/**/*
 src/frontend/model/
-__pycache__/**/*
+__pycache__/
 .env
 
 # Allow
