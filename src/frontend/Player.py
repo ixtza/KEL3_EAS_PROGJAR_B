@@ -2,7 +2,7 @@ import pygame
 
 class Player:
 
-	point = 0
+	point = 7
 
 	def __init__(self, img, id, x, y):
 		self.img = img

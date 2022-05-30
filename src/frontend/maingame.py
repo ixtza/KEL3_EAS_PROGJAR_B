@@ -5,8 +5,13 @@ import pygame
 import Player
 import Arena
 import GameController
+import random
 
 import os 
+
+#clear console
+def clear_console():
+    os.system('cls')
 
 #working directory path
 work_dir = os.path.dirname(os.path.realpath(__file__))
@@ -49,28 +54,43 @@ while running:
 		#If any valid input from player
 		if changeTurn:
 			player.setPoint(player.getPoint() - 1)
+			# print("Player " + str(player.id + 1) + " has " + str(player.getPoint()) + " points.")
+			clear_console()
+			print("Current score status: "
+			+ str(players[0].getPoint()) + " "
+			+ str(players[1].getPoint()) + " "
+			+ str(players[2].getPoint()) + " "
+			+ str(players[3].getPoint())
+			)
+
 			#check for break, energy, and finish
 			for brk in arena.getBreaks():
 				if player.getX() == brk.getX() and player.getY() == brk.getY():
 					gamecontroller.addEliminated(gamecontroller.getturn())
 			for energy in arena.getEnergys():
 				if player.getX() == energy.getX() and player.getY() == energy.getY():
-					player.setPoint(player.getPoint() + 5)
+					point = random.randint(3, 10)
+					player.setPoint(player.getPoint() + point)
+					print("Player " + str(player.id + 1) + " get " + str(point) + " points.")
 			if player.getX() == 160 and player.getY() == 160:
 				gamecontroller.addEliminated(gamecontroller.getturn())
 			
 			#check if all players is finished
-			if (len(gamecontroller.getEliminated())	 > 3):
+			if (len(gamecontroller.getEliminated())	> 3):
 				maxpoint = -999999
 				winner = 0
 				for player in players:
 					if player.getPoint() > maxpoint:
 						maxpoint = player.getPoint()
 						winner = player.getId()+1
-				print("Player"+str(winner)+" Win!")
+				print("Player " + str(winner) + " Win!")
 				running=False
 
 			gamecontroller.nextturn()
+			if player.id < 3:
+				print("Player " + str(player.id + 1 + 1) + "'s " + "turn.")
+			else:
+				print("Player " + str(1) + "'s " + "turn.")
 
 	#RGB Red, Green, Blue
 	screen.fill((0,255,0))
