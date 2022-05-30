@@ -32,49 +32,7 @@ def Arena(x,y):
 	screen.blit(arenaImg,(x,y))
 
 #players
-<<<<<<< HEAD
-# player1Img = pygame.image.load(work_dir+"/assets/player/player1.png")
-player1Img = pygame.image.load(work_dir+"/assets/model/model_move.png").convert_alpha()
-player1X = 0
-player1Y = 320
-
-spriteModel = model.SpriteModel(player1Img)
-player_animation_list = [[]]
-player_animation_movement = 4
-player_animation_steps = 7
-frame = 0
-
-def Player1(x,y,move):
-	screen.blit(player1Img,(x,y))
-	move = 32
-	if move == pygame.K_LEFT:
-		frame = 2
-		for s in range(player_animation_steps):
-			# screen.blit(player1Img,(x,y))
-			screen.blit(player_animation_list[s][frame], (x,y))
-	if move == pygame.K_RIGHT:
-		frame = 1
-		for x in range(player_animation_steps):
-			# screen.blit(player1Img,(x,y))
-			screen.blit(player_animation_list[s][frame], (x,y))
-	if move == pygame.K_UP:
-		frame = 3
-		for x in range(player_animation_steps):
-			# screen.blit(player1Img,(x,y))
-			screen.blit(player_animation_list[s][frame], (x,y))
-	if move == pygame.K_DOWN:
-		frame = 0
-		for x in range(player_animation_steps):
-			# screen.blit(player1Img,(x,y))
-			screen.blit(player_animation_list[s][frame], (x,y))
-
-for x in range(player_animation_steps):
-	player_animation_list.append([])
-	for y in range(player_animation_movement):
-		(player_animation_list[x]).append(spriteModel.get_image(x,y,32,32,10,(0,0,0)))
-=======
 player1 = Player.Player(pygame.image.load(work_dir+"/assets/player/player1.png"), 0, 320)
->>>>>>> b55d8608244672b722aee57df58df369921af282
 
 #keyboard
 pressed = False
@@ -149,16 +107,6 @@ while running:
 		if event.key == pygame.K_DOWN:
 			player1.y = player1.y + 32
 
-<<<<<<< HEAD
-	if player1X < 0:
-		player1X = 0
-	if player1X > 320:
-		player1X = 320
-	if player1Y < 0:
-		player1Y = 0
-	if player1Y > 320:
-		player1Y = 320
-=======
 	if player1.x < 0:
 		player1.x = 0
 	if player1.x > 352:
@@ -167,16 +115,11 @@ while running:
 		player1.y = 352
 	if player1.y > 352:
 		player1.y = 352
->>>>>>> b55d8608244672b722aee57df58df369921af282
 
 	if event.type == pygame.KEYUP:
 		pressed = False
 
-<<<<<<< HEAD
-	Player1(player1X,player1Y,event.key)
-=======
 	player1.print(screen)
->>>>>>> b55d8608244672b722aee57df58df369921af282
 
 	for i in range(num_of_breaks):
 		breaks[i].print(screen)
