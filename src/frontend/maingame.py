@@ -60,9 +60,7 @@ while running:
 		changeTurn = player.check_movement(event)
 		#If any valid input from player
 		if changeTurn:
-			if player.point == 0:
-				gamecontroller.addRunOutOfPoints(gamecontroller.getturn())
-			else:
+			if player.point >= 0:
 				player.setPoint(player.getPoint() - 1)
 
 			clear_console()
@@ -82,8 +80,16 @@ while running:
 					point = random.randint(3, 10)
 					player.setPoint(player.getPoint() + point)
 					print("Player " + str(player.id + 1) + " get " + str(point) + " points.")
+			for loss in arena.getLoss():
+				if player.getX() == loss.getX() and player.getY() == loss.getY():
+					point = random.randint(-7, -3)
+					player.setPoint(player.getPoint() + point)
+					print("Player " + str(player.id + 1) + " get " + str(point) + " loss.")
 			if player.getX() == 160 and player.getY() == 160:
 				gamecontroller.addEliminated(gamecontroller.getturn())
+
+			if player.point <= 0:
+				gamecontroller.addRunOutOfPoints(gamecontroller.getturn())
 
 			#check if all players is finished
 			if (len(gamecontroller.getEliminated()) > 3):
