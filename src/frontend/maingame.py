@@ -8,6 +8,7 @@ import GameController
 
 import os 
 import model
+import time
 
 #working directory path
 work_dir = os.path.dirname(os.path.realpath(__file__))
@@ -29,13 +30,21 @@ arena.generate_map()
 
 #players
 players = []
-players.append(Player.Player(pygame.image.load(work_dir+"/assets/player/player1.png"), 0, 0, 320))
-players.append(Player.Player(pygame.image.load(work_dir+"/assets/player/player2.png"), 1, 0, 0))
-players.append(Player.Player(pygame.image.load(work_dir+"/assets/player/player3.png"), 2, 320, 0))
-players.append(Player.Player(pygame.image.load(work_dir+"/assets/player/player4.png"), 3, 320, 320))
+players.append(Player.Player(pygame.image.load(work_dir+"/assets/model/model_move.png").convert_alpha(), 0, 0, 320))
+players.append(Player.Player(pygame.image.load(work_dir+"/assets/model/model_move.png").convert_alpha(), 1, 0, 0))
+players.append(Player.Player(pygame.image.load(work_dir+"/assets/model/model_move.png").convert_alpha(), 2, 320, 0))
+players.append(Player.Player(pygame.image.load(work_dir+"/assets/model/model_move.png").convert_alpha(), 3, 320, 320))
 
 #gamecontroller
 gamecontroller = GameController.GameController(0)
+
+#game ticks
+dt, prevTime = 0, 0
+
+def get_dt():
+	now = time.time()
+	dt = now - prevTime
+	prevTime = now
 
 #gameloop
 running = True
@@ -79,6 +88,6 @@ while running:
 	arena.print(screen)
 
 	for player in players:
-		player.print(screen)
+		player.render(screen)
 
 	pygame.display.update()
