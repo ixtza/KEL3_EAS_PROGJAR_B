@@ -60,10 +60,10 @@ while running:
 		changeTurn = player.check_movement(event)
 		#If any valid input from player
 		if changeTurn:
-			player.setPoint(player.getPoint() - 1)
-			
 			if player.point == 0:
 				gamecontroller.addRunOutOfPoints(gamecontroller.getturn())
+			else:
+				player.setPoint(player.getPoint() - 1)
 
 			clear_console()
 			print("Current score status: "
