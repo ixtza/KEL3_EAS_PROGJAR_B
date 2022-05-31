@@ -2,6 +2,8 @@
 eas_kel3_env/**/*
 tmp/**/*
 src/frontend/model/
+__pycache__/
+.env
 
 # Allow
 !eas_kel3_env/requirements.txt
