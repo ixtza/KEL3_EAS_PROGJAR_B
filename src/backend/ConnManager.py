@@ -10,7 +10,6 @@ class ConnManager(threading.Thread):
 		self.silent = silent
 		self.clients = []
 		self.clientManager = clientManager()
-		self.clientManager = self.clientManager.start()
 
 	def push(self, conn, addr):
 		player = PlayerConn(conn, addr, self.clientManager)

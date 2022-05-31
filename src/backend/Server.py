@@ -9,7 +9,7 @@ from ConnManager import ConnManager
 from RoomManager import RoomManager
 
 class Server:
-	def __init__(self, manager, clientManager,):
+	def __init__(self, manager, clientManager):
 		env = dotenv.dotenv_values('.env')
 		if len(env) == 0:
 			raise ServerEnvException("Env not found")
@@ -59,5 +59,5 @@ class Server:
 			c.join()
 
 if __name__ == "__main__":
-	s = Server(ConnManager)
+	s = Server(ConnManager, RoomManager)
 	s.run()
