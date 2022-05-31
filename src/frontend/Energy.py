@@ -5,7 +5,7 @@ class Energy:
 		self.y = y
 
 	def print(self, screen):
-		screen.blit(self.img,(self.x, self.y))
+		screen.blit(self.img, (self.x, self.y))
 
 	def getX(self):
 		return self.x
