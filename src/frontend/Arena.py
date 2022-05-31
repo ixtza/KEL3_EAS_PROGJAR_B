@@ -94,7 +94,7 @@ class Arena:
 				elif i < 12:
 					randX = random.randint(5, 9)
 					randY = random.randint(5, 9)
-			self.breaks.append(Loss.Loss(pygame.image.load(
+			self.loss.append(Loss.Loss(pygame.image.load(
 				work_dir + "/assets/loss/loss.png"), randX * 32, randY * 32))
 			self.illegal_place.append((randX, randY))
 
