@@ -7,6 +7,7 @@ import Arena
 import GameController
 import random
 import os
+import time
 
 #clear console
 def clear_console():
@@ -42,17 +43,22 @@ players.append(Player.Player(pygame.image.load(work_dir+"/assets/model/model_mov
 gamecontroller = GameController.GameController(0)
 
 #game ticks
-dt, prevTime = 0, 0
+dt = 0
+prevTime = 0 
+clock = pygame.time.Clock()
 
-def get_dt():
+def get_dt(lastUpdate):
 	now = time.time()
-	dt = now - prevTime
+	dt = now - lastUpdate
 	prevTime = now
+	return dt
 
 #gameloop
 running = True
 while running:
+	clock.tick(60)
 	for event in pygame.event.get():
+		dt = get_dt(prevTime)
 		if event.type == pygame.QUIT:
 			running = False
 
@@ -66,11 +72,11 @@ while running:
 
 			clear_console()
 			print("Current score status: "
-                            + str(players[0].getPoint()) + " "
-                            + str(players[1].getPoint()) + " "
-                            + str(players[2].getPoint()) + " "
-                            + str(players[3].getPoint())
-         )
+							+ str(players[0].getPoint()) + " "
+							+ str(players[1].getPoint()) + " "
+							+ str(players[2].getPoint()) + " "
+							+ str(players[3].getPoint())
+			)
 
 			#check for break, energy, and finish
 			for brk in arena.getBreaks():
@@ -115,6 +121,7 @@ while running:
 	arena.print(screen)
 
 	for player in players:
+		player.update(dt)
 		player.render(screen)
 
 	pygame.display.update()
