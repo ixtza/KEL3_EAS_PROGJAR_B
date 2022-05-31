@@ -82,6 +82,11 @@ while running:
 					point = random.randint(3, 10)
 					player.setPoint(player.getPoint() + point)
 					print("Player " + str(player.id + 1) + " get " + str(point) + " points.")
+			for loss in arena.getLoss():
+				if player.getX() == loss.getX() and player.getY() == loss.getY():
+					point = random.randint(-7, -3)
+					player.setPoint(player.getPoint() + point)
+					print("Player " + str(player.id + 1) + " get " + str(point) + " loss.")
 			if player.getX() == 160 and player.getY() == 160:
 				gamecontroller.addEliminated(gamecontroller.getturn())
 

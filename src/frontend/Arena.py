@@ -2,6 +2,7 @@ import pygame
 import random
 import Break
 import Energy
+import Loss
 import os
 
 #working directory path
@@ -13,8 +14,10 @@ class Arena:
 	illegal_place = [(5, 5)]
 	breaks = []
 	energys = []
+	loss = []
 	num_of_breaks = 12
 	num_of_energys = 12
+	num_of_loss = 12
 
 	def __init__(self, img, x, y):
 		self.img = img
@@ -29,6 +32,9 @@ class Arena:
 
 		for i in range(self.num_of_energys):
 			self.energys[i].print(screen)
+		
+		for i in range(self.num_of_loss):
+			self.loss[i].print(screen)
 
 	#generate energy and brekas
 	def generate_map(self):
@@ -72,8 +78,31 @@ class Arena:
 				work_dir + "/assets/break/break.png"), randX * 32, randY * 32))
 			self.illegal_place.append((randX, randY))
 
+		for i in range(self.num_of_loss):
+			randX = 5
+			randY = 5
+			while (randX, randY) in self.illegal_place:
+				if i < 3:
+					randX = random.randint(1, 5)
+					randY = random.randint(1, 5)
+				elif i < 6:
+					randX = random.randint(5, 9)
+					randY = random.randint(1, 5)
+				elif i < 9:
+					randX = random.randint(1, 5)
+					randY = random.randint(5, 9)
+				elif i < 12:
+					randX = random.randint(5, 9)
+					randY = random.randint(5, 9)
+			self.breaks.append(Loss.Loss(pygame.image.load(
+				work_dir + "/assets/loss/loss.png"), randX * 32, randY * 32))
+			self.illegal_place.append((randX, randY))
+
 	def getBreaks(self):
 		return self.breaks
 
 	def getEnergys(self):
 		return self.energys
+
+	def getLoss(self):
+		return self.loss
