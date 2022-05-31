@@ -18,4 +18,8 @@ class GameController:
 
 	def addEliminated(self, playerid):
 		self.eliminated.append(playerid)
-		print("Player"+str(playerid+1)+" gets a break!")
+		print("Player "+str(playerid+1)+" gets a break!")
+
+	def addRunOutOfPoints(self, playerid):
+		self.eliminated.append(playerid)
+		print("Player "+str(playerid+1)+" has run out of points.")

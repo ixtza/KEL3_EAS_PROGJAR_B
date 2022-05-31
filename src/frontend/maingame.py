@@ -61,7 +61,10 @@ while running:
 		#If any valid input from player
 		if changeTurn:
 			player.setPoint(player.getPoint() - 1)
-			# print("Player " + str(player.id + 1) + " has " + str(player.getPoint()) + " points.")
+			
+			if player.point == 0:
+				gamecontroller.addRunOutOfPoints(gamecontroller.getturn())
+
 			clear_console()
 			print("Current score status: "
                             + str(players[0].getPoint()) + " "
@@ -94,10 +97,6 @@ while running:
 				running = False
 
 			gamecontroller.nextturn()
-			if player.id < 3:
-				print("Player " + str(player.id + 2) + "'s " + "turn.")
-			else:
-				print("Player " + str(1) + "'s " + "turn.")
 
 	#RGB Red, Green, Blue
 	screen.fill((0, 255, 0))
