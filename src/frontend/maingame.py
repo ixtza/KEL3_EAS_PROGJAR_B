@@ -33,8 +33,10 @@ pygame.display.set_icon(icon)
 #arena
 arena = Arena.Arena(pygame.image.load(
     work_dir + "/assets/arena/arena.png"), 0, 0)
+# TODO kirim map generated ke semua player
 arena.generate_map()
 
+# TODO tunggu semua player
 #players
 players = []
 players.append(Player.Player(pygame.image.load(
@@ -70,6 +72,7 @@ while running:
 		dt = get_dt(prevTime)
 		if event.type == pygame.QUIT:
 			running = False
+			# TODO close conn, close window
 
 		#Check input for specific player
 		player = players[gamecontroller.getturn()]
