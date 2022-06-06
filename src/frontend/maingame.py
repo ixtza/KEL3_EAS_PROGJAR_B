@@ -51,7 +51,7 @@ gamecontroller = GameController.GameController(0)
 
 #game ticks
 dt = 0
-prevTime = 0 
+prevTime = 0
 clock = pygame.time.Clock()
 
 
