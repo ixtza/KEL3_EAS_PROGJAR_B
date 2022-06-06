@@ -1,7 +1,7 @@
 # Ignore
 eas_kel3_env/**/*
 tmp/**/*
-src/frontend/model/
+tests/frontend/model/
 __pycache__/
 .env
 
