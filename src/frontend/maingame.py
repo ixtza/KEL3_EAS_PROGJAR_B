@@ -10,8 +10,11 @@ import os
 import time
 
 #clear console
+
+
 def clear_console():
     os.system('cls')
+
 
 #working directory path
 work_dir = os.path.dirname(os.path.realpath(__file__))
@@ -34,10 +37,14 @@ arena.generate_map()
 
 #players
 players = []
-players.append(Player.Player(pygame.image.load(work_dir+"/assets/model/model_move.png").convert_alpha(), 0, 0, 320))
-players.append(Player.Player(pygame.image.load(work_dir+"/assets/model/model_move.png").convert_alpha(), 1, 0, 0))
-players.append(Player.Player(pygame.image.load(work_dir+"/assets/model/model_move.png").convert_alpha(), 2, 320, 0))
-players.append(Player.Player(pygame.image.load(work_dir+"/assets/model/model_move.png").convert_alpha(), 3, 320, 320))
+players.append(Player.Player(pygame.image.load(
+    work_dir+"/assets/model/model_move.png").convert_alpha(), 0, 0, 320))
+players.append(Player.Player(pygame.image.load(
+    work_dir+"/assets/model/model_move.png").convert_alpha(), 1, 0, 0))
+players.append(Player.Player(pygame.image.load(
+    work_dir+"/assets/model/model_move.png").convert_alpha(), 2, 320, 0))
+players.append(Player.Player(pygame.image.load(
+    work_dir+"/assets/model/model_move.png").convert_alpha(), 3, 320, 320))
 
 #gamecontroller
 gamecontroller = GameController.GameController(0)
@@ -47,11 +54,13 @@ dt = 0
 prevTime = 0 
 clock = pygame.time.Clock()
 
+
 def get_dt(lastUpdate):
 	now = time.time()
 	dt = now - lastUpdate
 	prevTime = now
 	return dt
+
 
 #gameloop
 running = True
@@ -72,11 +81,11 @@ while running:
 
 			clear_console()
 			print("Current score status: "
-							+ str(players[0].getPoint()) + " "
-							+ str(players[1].getPoint()) + " "
-							+ str(players[2].getPoint()) + " "
-							+ str(players[3].getPoint())
-			)
+                            + str(players[0].getPoint()) + " "
+                            + str(players[1].getPoint()) + " "
+                            + str(players[2].getPoint()) + " "
+                            + str(players[3].getPoint())
+         )
 
 			#check for break, energy, and finish
 			for brk in arena.getBreaks():
@@ -110,10 +119,6 @@ while running:
 				running = False
 
 			gamecontroller.nextturn()
-			if player.id < 3:
-				print("Player " + str(player.id + 2) + "'s " + "turn.")
-			else:
-				print("Player " + str(1) + "'s " + "turn.")
 
 	#RGB Red, Green, Blue
 	screen.fill((0, 255, 0))
