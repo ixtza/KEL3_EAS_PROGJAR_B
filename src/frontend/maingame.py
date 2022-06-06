@@ -1,10 +1,11 @@
-from re import L
 import pygame
 
 #importing game classes
 import Player
 import Arena
 import GameController
+import Text
+
 import random
 import os
 
@@ -22,12 +23,17 @@ work_dir = os.path.dirname(os.path.realpath(__file__))
 pygame.init()
 
 #create the screen
-screen = pygame.display.set_mode((352, 416))
+X = 352
+Y = 486
+screen = pygame.display.set_mode((X, Y))
 
 #title and icon
 pygame.display.set_caption("Tap Treasure")
 icon = pygame.image.load(work_dir + "/assets/icon/treasure.png")
 pygame.display.set_icon(icon)
+
+#text
+text_rock = Text.Text(work_dir + "/assets/fonts/ROCK.TTF")
 
 #arena
 arena = Arena.Arena(pygame.image.load(
@@ -105,11 +111,14 @@ while running:
 			gamecontroller.nextturn()
 
 	#RGB Red, Green, Blue
-	screen.fill((0, 255, 0))
+	screen.fill((255, 255, 255))
 
 	arena.print(screen)
 
+	Ytext = 406
 	for player in players:
+		Ytext += 15
 		player.print(screen)
+		text_rock.print(screen, "Player "+str(player.getId())+" Score : " + str(player.getPoint()), 64, Ytext)
 
 	pygame.display.update()
