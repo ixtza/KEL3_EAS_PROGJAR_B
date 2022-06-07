@@ -1,6 +1,5 @@
 import pygame
 
-
 class Player(pygame.sprite.Sprite):
 
 	point = 7
