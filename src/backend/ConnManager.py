@@ -4,15 +4,14 @@ from io import BytesIO
 from PlayerConn import PlayerConn
 from RoomManager import RoomManager
 
-class ConnManager(threading.Thread):
+class ConnManager():
 	def __init__(self, clientManager, silent=False):
-		threading.Thread.__init__(self)
 		self.silent = silent
 		self.clients = []
 		self.clientManager = clientManager()
 
 	def push(self, conn, addr):
-		player = PlayerConn(conn, addr, self.clientManager)
+		player = PlayerConn(conn, addr, self, self.clientManager)
 		self.clients.append(player)
 		player.start()
 

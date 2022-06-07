@@ -4,11 +4,13 @@ class Player(pygame.sprite.Sprite):
 
 	point = 7
 
-	def __init__(self, img, id, x, y):
+	def __init__(self, img, id, x, y, ours=True, serverId=None):
 		self.img = img
 		self.id = id
 		self.x = x
 		self.y = y
+		self.ours = ours
+		self.serverId = serverId
 
 		self.anim = 5
 		self.animList = []
