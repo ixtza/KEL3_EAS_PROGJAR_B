@@ -21,7 +21,6 @@ class Server:
 		self.manager = manager
 		self.clientManager = clientManager
 		self.running = False
-		self._stop_event = threading.Event()
 
 	def open_socket(self):
 		self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -45,7 +44,7 @@ class Server:
 					# handle the server socket
 					client_socket, client_address = self.server.accept() # revise
 					manager.push(client_socket,client_address)
-					self.threads.append(c)
+					# self.threads.append(c)
 				elif s == sys.stdin:
 					# handle standard input
 					junk = sys.stdin.readline()
@@ -54,9 +53,9 @@ class Server:
 
 
 	 # close all threads
-		self.server.close()
-		for c in self.threads:
-			c.join()
+		# self.server.close()
+		# for c in self.threads:
+		# 	c.join()
 
 if __name__ == "__main__":
 	s = Server(ConnManager, RoomManager)

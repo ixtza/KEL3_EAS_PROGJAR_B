@@ -5,6 +5,9 @@ class GameController:
 	def __init__(self, turn):
 		self.turn = turn
 
+	"""
+	TODO getturn dari server?
+	"""
 	def getturn(self):
 		return self.turn
 

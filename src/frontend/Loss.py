@@ -1,6 +1,3 @@
-from re import X
-
-
 class Loss:
 	def __init__(self, img, x, y):
 		self.img = img
