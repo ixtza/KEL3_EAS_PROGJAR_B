@@ -1,5 +1,6 @@
 import threading
 import pickle
+import socket
 from io import BytesIO
 from uuid import uuid4
 
@@ -23,7 +24,11 @@ class PlayerConn(threading.Thread):
 	def stop(self, removed=False):
 		self.removed = removed
 		self.running = False
-		self.conn.close()
+
+		try: 	 self.conn.shutdown(socket.SHUT_RDWR)
+		except:  pass
+		finally: self.conn.close()
+
 		print(self.id + ' stopped')
 
 	def stopped(self):
@@ -32,7 +37,11 @@ class PlayerConn(threading.Thread):
 	def close(self):
 		if not self.removed:
 			self.roomManager.removePlayer(self)
-		self.conn.close()
+
+		try: 	 self.conn.shutdown(socket.SHUT_RDWR)
+		except:  pass
+		finally: self.conn.close()
+
 		print(self.id + ' closed')
 
 	"""
@@ -84,5 +93,5 @@ class PlayerConn(threading.Thread):
 							# ["play", (gerakan)] -> self.roomManager.playerMove(self.id, gerakan[0], gerakan[1])
 
 					packet = self.conn.recv(1024)
-		except:  self.close()
+		except:  pass
 		finally: self.close()
