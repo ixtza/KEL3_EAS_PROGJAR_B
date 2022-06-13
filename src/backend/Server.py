@@ -4,9 +4,9 @@ import sys
 import threading
 import math
 import dotenv
-from ServerEnvException import ServerEnvException
-from ConnManager import ConnManager
-from RoomManager import RoomManager
+from exception.ServerEnvException import ServerEnvException
+from manager.ConnManager import ConnManager
+from manager.RoomManager import RoomManager
 
 class Server:
 	def __init__(self, manager, clientManager):
