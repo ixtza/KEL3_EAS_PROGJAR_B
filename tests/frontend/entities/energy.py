@@ -31,7 +31,7 @@ class Energy:
 		if self.is_picked == False:
 			entities = self.get_hits(players)
 			for entity in entities:
-				entity.stamina += 3
+				entity.point += 3
 
 	def update(self, players):
 		self.check_collision(players)

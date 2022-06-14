@@ -50,13 +50,25 @@ class Arena():
 
 		self.changeTurn = self.players[self.playerTurn].update(delta_time,actions,self.players)
 		if self.changeTurn:
+			os.system('cls')
+			print("Current Turn: "+ str(self.playerTurn+1) +"\nCurrent score status: \n"
+			                    'Player '+ str(self.players[0].id) + ' :' + str(self.players[0].getPoint()) + '-' + str(self.players[0].is_alive) + "\n"
+			                    'Player '+ str(self.players[1].id) + ' :' + str(self.players[1].getPoint()) + '-' + str(self.players[1].is_alive) + "\n"
+			                    'Player '+ str(self.players[2].id) + ' :' + str(self.players[2].getPoint()) + '-' + str(self.players[2].is_alive) + "\n"
+			                    'Player '+ str(self.players[3].id) + ' :' + str(self.players[3].getPoint()) + '-' + str(self.players[3].is_alive) 
+			)
+			# mengganti turn player, ketika is_alive player false, maka akan langsung otomastis switch ke giliran selanjutnya
+
 			self.game_controller.nextturn()
 			self.playerTurn = self.game_controller.getturn()
-			if self.players[self.playerTurn].is_alive is False:
-				self.playerTurn = self.game_controller.getturn()
+			if self.players[self.playerTurn].is_alive == False:
+				self.game_controller.addEliminated(self.players[self.playerTurn].id)
+				if len(self.game_controller.getEliminated()) == 4:
+					print('permainan berakhir')
+
 			# Kirim flag apapun ke server, menandakan player turn harus berubah
 			# ...
-			print("kirim ke server pergerakan selesai")
+			# print("kirim ke server pergerakan selesai")
 
 	# render sebagai hasil visual terhadap update object
 	def render(self, display):

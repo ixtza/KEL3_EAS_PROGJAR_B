@@ -34,8 +34,8 @@ class Player(pygame.sprite.Sprite):
 		# is alive
 		self.is_alive = True
 
-		# stamina
-		self.stamina = 5
+		# point
+		self.point = 5
 
 		self.load_sprites()
 
@@ -98,6 +98,8 @@ class Player(pygame.sprite.Sprite):
 		if self.is_alive is False:
 			self.animMode = 0
 			self.currentFrame = 0
+			self.point = 0
+			return True
 
 	def render(self, display):
 		if self.newX == 0 and self.newY == 0:
@@ -105,7 +107,7 @@ class Player(pygame.sprite.Sprite):
 		display.blit(self.animList[self.animMode][self.currentFrame], (self.x,self.y))
 
 	def alive(self):
-		if self.stamina < 1:
+		if self.point < 1:
 			self.is_alive = False
 
 	def check_movement(self, actions):
@@ -132,6 +134,7 @@ class Player(pygame.sprite.Sprite):
 				self.newY = 0
 				return False
 			self.is_turn = True
+			self.point -= 1
 			return False
 		if actions['keyup'] == True and self.moving == False:
 			self.facing = None
@@ -139,6 +142,8 @@ class Player(pygame.sprite.Sprite):
 			self.newY = 0
 			if self.is_turn == True:
 				# To be sent to server that the turn is finish
+				# memanggil fungsi is alive guna mengecek apakah masih bisa bermain untuk giliran selanjutnya
+				self.alive()
 				self.is_turn = False
 				return True
 		return False

@@ -6,7 +6,7 @@ class Break(pygame.sprite.Sprite):
 		self.x = x
 		self.y = y
 
-		# tricked so that player's stamina whose already fell
+		# tricked so that player's point whose already fell
 		# into the trap becomes negative
 		self.tricked = None
 
@@ -22,11 +22,12 @@ class Break(pygame.sprite.Sprite):
 	def get_hits(self, players):
 		hits = []
 		for player in players:
-			if player.is_alive == True:
+			# cek ketika sudah di koordinatnya
+			if player.is_alive and player.x is self.x and player.y is self.y:
 				if self.rect.colliderect(player.rect):
 					if self.tricked != player.id:
 						self.tricked = player.id
-						player.stamina -= 1
+						player.point -= 1
 					hits.append(player)
 		return hits
 
@@ -44,6 +45,7 @@ class Break(pygame.sprite.Sprite):
 
 	def update(self, players):
 		self.check_collision(players)
+		pass
 		
 	def render(self, display):
 		display.blit(self.img, (self.x, self.y))

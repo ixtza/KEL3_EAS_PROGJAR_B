@@ -18,9 +18,11 @@ class Loss(pygame.sprite.Sprite):
 	def get_hits(self, players):
 		hits = []
 		for player in players:
-			if player.is_alive:
-				if self.rect.colliderect(player.rect):
-					hits.append(player)
+			# cek ketika sudah di koordinatnya
+			if player.is_alive and player.x == self.x and player.y == self.y:
+				print(player.id)
+				# if self.rect.colliderect(player.rect):
+				hits.append(player)
 		return hits
 
 	def check_collision(self, players):
