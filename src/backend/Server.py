@@ -3,7 +3,7 @@ import socket
 import sys
 import threading
 import math
-import dotenv
+# import dotenv
 from ServerEnvException import ServerEnvException
 from ConnManager import ConnManager
 from RoomManager import RoomManager

@@ -103,6 +103,12 @@ while running:
 					point = -4
 					player.setPoint(player.getPoint() + point)
 					print("Player " + str(player.id + 1) + " get " + str(point) + " loss.")
+			for warning_break in arena.getWarningBreaks():
+				if player.getX() == warning_break.getX() and player.getY() == warning_break.getY():
+					print("Warning for Player " + str(player.id + 1) + "! there is a break near you.")
+			for warning_loss in arena.getWarningLoss():
+				if player.getX() == warning_loss.getX() and player.getY() == warning_loss.getY():
+					print("Warning for Player " + str(player.id + 1) + "! there is a loss near you.")
 			if player.getX() == 160 and player.getY() == 160:
 				gamecontroller.addEliminated(gamecontroller.getturn())
 
