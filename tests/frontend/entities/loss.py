@@ -8,6 +8,7 @@ class Loss(pygame.sprite.Sprite):
 
 		# collision
 		self.rect = pygame.Rect(x, y, 32, 32)
+		self.is_passed = False
 
 	def getX(self):
 		return self.x
@@ -18,9 +19,12 @@ class Loss(pygame.sprite.Sprite):
 	def get_hits(self, players):
 		hits = []
 		for player in players:
-			if player.is_alive:
-				if self.rect.colliderect(player.rect):
-					hits.append(player)
+			# cek ketika sudah di koordinatnya
+			if player.is_alive and player.x == self.x and player.y == self.y:
+				self.is_passed = True
+				print(player.id)
+				# if self.rect.colliderect(player.rect):
+				hits.append(player)
 		return hits
 
 	def check_collision(self, players):
@@ -33,4 +37,5 @@ class Loss(pygame.sprite.Sprite):
 		pass
 
 	def render(self, display):
-		display.blit(self.img, (self.x, self.y))
+		if self.is_passed:
+			display.blit(self.img, (self.x, self.y))

@@ -1,9 +1,10 @@
 class GameController:
 
-	eliminated = []
 
 	def __init__(self, turn):
 		self.turn = turn
+		# mengubah global var ke atribut entitas
+		self.eliminated = []
 
 	"""
 	TODO getturn dari server?
@@ -13,16 +14,20 @@ class GameController:
 
 	def nextturn(self):
 		self.turn = (self.turn + 1) % 4
-		while self.turn in self.eliminated:
+		while self.turn in self.eliminated and len(self.eliminated) is not 4:
 			self.turn = (self.turn + 1) % 4
 
 	def getEliminated(self):
 		return self.eliminated
 
 	def addEliminated(self, playerid):
-		self.eliminated.append(playerid)
-		print("Player "+str(playerid+1)+" gets a break!")
+		# memperbaiki logic agar memasukan player id yang tidak terdapat pada list eliminsi
+		if playerid not in self.eliminated:
+			self.eliminated.append(playerid)
+			print("Player "+str(playerid)+" gets a break!")
 
 	def addRunOutOfPoints(self, playerid):
-		self.eliminated.append(playerid)
-		print("Player "+str(playerid+1)+" has run out of points.")
+		# memperbaiki logic agar memasukan player id yang tidak terdapat pada list eliminsi
+		if playerid not in self.eliminated:
+			self.eliminated.append(playerid)
+			print("Player "+str(playerid)+" has run out of points.")
