@@ -12,7 +12,17 @@ class Game():
 		self.game_canvas = pygame.Surface((self.GAME_W,self.GAME_H))
 		self.display = pygame.display.set_mode((self.SCREEN_W,self.SCREEN_H))
 		self.running, self.playing = True, True
-		self.actions = {"keydown": False, "keyup": True,"left": False, "right": False, "up" : False, "down" : False, "action1" : False, "action2" : False, "start" : False}
+		self.actions = {
+			"keydown": False, 
+			"keyup": True,
+			"left": False, 
+			"right": False, 
+			"up" : False, 
+			"down" : False, 
+			"action1" : False, 
+			"action2" : False, 
+			"start" : False
+			}
 		self.state_stack = []
 		self.BLACK, self.WHITE = (0,0,0),(255,255,255)
 
@@ -29,8 +39,8 @@ class Game():
 		while self.playing:
 			self.get_dt()
 			self.get_events()
-			self.update()
 			self.render()
+			self.update()
 
 	def get_events(self):
 		for event in pygame.event.get():

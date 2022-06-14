@@ -39,6 +39,9 @@ class Player(pygame.sprite.Sprite):
 
 		self.load_sprites()
 
+		# Flag untuk mengganti giliran player
+		self.is_turn = False
+
 	def isOutsideArea(self):
 		if self.x + self.newX < 0:
 			self.x = 0
@@ -87,10 +90,14 @@ class Player(pygame.sprite.Sprite):
 		return image
 
 	def update(self, deltaTime, actions, players):
-		self.alive()
-		self.check_movement(actions)
-		self.check_collision(players)
-		self.animate(deltaTime)
+		if self.is_alive:
+			change = self.check_movement(actions)
+			self.check_collision(players)
+			self.animate(deltaTime)
+			return change
+		if self.is_alive is False:
+			self.animMode = 0
+			self.currentFrame = 0
 
 	def render(self, display):
 		if self.newX == 0 and self.newY == 0:
@@ -102,7 +109,7 @@ class Player(pygame.sprite.Sprite):
 			self.is_alive = False
 
 	def check_movement(self, actions):
-		if actions['keydown'] == True and self.moving == False:
+		if actions['keydown'] == True and self.moving == False and self.is_turn == False:
 			self.moving = True
 			if actions['left'] == True:
 				self.facing = 'left'
@@ -124,16 +131,20 @@ class Player(pygame.sprite.Sprite):
 				self.newX = 0
 				self.newY = 0
 				return False
-			return True
+			self.is_turn = True
+			return False
 		if actions['keyup'] == True and self.moving == False:
 			self.facing = None
 			self.newX = 0
 			self.newY = 0
+			if self.is_turn == True:
+				# To be sent to server that the turn is finish
+				self.is_turn = False
+				return True
 		return False
 	
 	def get_hits(self, players):
 		hits = []
-		print(self.is_alive, self.stamina)
 		for player in players:
 			if player.id != self.getId():
 				if self.rect.colliderect(player.rect):
