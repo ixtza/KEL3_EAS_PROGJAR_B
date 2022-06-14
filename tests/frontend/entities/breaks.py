@@ -28,7 +28,6 @@ class Break(pygame.sprite.Sprite):
 						self.tricked = player.id
 						player.stamina -= 1
 					hits.append(player)
-
 		return hits
 
 	def check_collision(self, players):
