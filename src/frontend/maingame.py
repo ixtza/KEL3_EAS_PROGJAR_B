@@ -95,12 +95,12 @@ while running:
 					gamecontroller.addEliminated(gamecontroller.getturn())
 			for energy in arena.getEnergys():
 				if player.getX() == energy.getX() and player.getY() == energy.getY():
-					point = random.randint(3, 10)
+					point = 6
 					player.setPoint(player.getPoint() + point)
 					print("Player " + str(player.id + 1) + " get " + str(point) + " points.")
 			for loss in arena.getLoss():
 				if player.getX() == loss.getX() and player.getY() == loss.getY():
-					point = random.randint(-7, -3)
+					point = -4
 					player.setPoint(player.getPoint() + point)
 					print("Player " + str(player.id + 1) + " get " + str(point) + " loss.")
 			if player.getX() == 160 and player.getY() == 160:
