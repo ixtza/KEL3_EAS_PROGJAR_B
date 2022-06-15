@@ -122,12 +122,12 @@ while running:
 					break_marker = True
 			for energy in arena.getEnergys():
 				if player.getX() == energy.getX() and player.getY() == energy.getY():
-					point = 6
+					point = 8
 					player.setPoint(player.getPoint() + point)
 					print("Player " + str(player.id + 1) + " get " + str(point) + " points.")
 			for loss in arena.getLoss():
 				if player.getX() == loss.getX() and player.getY() == loss.getY():
-					point = -4
+					point = -3
 					player.setPoint(player.getPoint() + point)
 					print("Player " + str(player.id + 1) + " get " + str(point) + " loss.")
 					text.print(screen, "Player " + str(player.id + 1) + " get " + str(point) + " loss.", 250, 485)
