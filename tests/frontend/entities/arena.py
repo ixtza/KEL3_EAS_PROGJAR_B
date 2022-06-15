@@ -40,7 +40,10 @@ class Arena():
 
 		# socre board text position
 		self.text = Text(os.path.join(self.game.font_dir, "ROCK.ttf"),14)
-		self.Ytext = 0
+
+		# finish line
+		self.finishLine = (160,160)
+		self.finish = False
 
 	# update sebagai pengatur nilai object (letak, dls)
 	def update(self, delta_time, actions):
@@ -64,17 +67,31 @@ class Arena():
 			)
 			# mengganti turn player, ketika is_alive player false, maka akan langsung otomastis switch ke giliran selanjutnya
 
-			self.game_controller.nextturn()
-			self.playerTurn = self.game_controller.getturn()
-			if self.players[self.playerTurn].is_alive == False:
-				self.game_controller.addEliminated(self.players[self.playerTurn].id)
-				if len(self.game_controller.getEliminated()) == 4:
-					print('permainan berakhir')
+			# cek apakah player sekarang sudah mencapai lokasi finish, jika iya permainan berakhir
 
-			# Kirim flag apapun ke server, menandakan player turn harus berubah
-			# ...
-			# print("kirim ke server pergerakan selesai")
+			if self.check_finish(self.players[self.playerTurn]):
+				print('Player '+str(self.players[self.playerTurn].id)+' menang!')
+				for player in self.players:
+					player.is_alive = False
+			else:
+				print(self.playerTurn)
+				self.game_controller.nextturn()
+				self.playerTurn = self.game_controller.getturn()
+				if self.players[self.playerTurn].is_alive == False:
+					self.game_controller.addEliminated(self.players[self.playerTurn].id)
+					if len(self.game_controller.getEliminated()) == 4:
+						print('permainan berakhir')
 
+				# Kirim flag apapun ke server, menandakan player turn harus berubah
+				# ...
+				# print("kirim ke server pergerakan selesai")
+
+	# finish sebagai salah satu cara akhir dari permainan
+	def check_finish(self, player):
+		if (player.x, player.y) == self.finishLine:
+			self.finish = True
+		return self.finish
+	
 	# render sebagai hasil visual terhadap update object
 	def render(self, display):
 		display.blit(self.arena_img, (0,0))
