@@ -59,6 +59,6 @@ class Break(pygame.sprite.Sprite):
 		pass
 		
 	def render(self, display):
-		# if self.is_passed:
-		# 	display.blit(self.img, (self.x, self.y))
-		display.blit(self.img, (self.x, self.y))
+		if self.is_passed:
+			display.blit(self.img, (self.x, self.y))
+		# display.blit(self.img, (self.x, self.y))
