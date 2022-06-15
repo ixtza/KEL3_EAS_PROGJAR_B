@@ -39,7 +39,7 @@ class Arena():
 		self.frame = 0
 
 		# socre board text position
-		self.text = Text(os.path.join(self.game.font_dir, "PressStart2P-vaV7.ttf"),13)
+		self.text = Text(os.path.join(self.game.font_dir, "ROCK.ttf"),14)
 		self.Ytext = 0
 
 	# update sebagai pengatur nilai object (letak, dls)
@@ -90,7 +90,9 @@ class Arena():
 
 		for player in self.players:
 			player.render(display)
-			self.text.render(display, "P-" + str(player.getId()) + " Score :" + str(player.getPoint()),440, (player.getId()+1) * 15)
+		
+		for player in self.players:
+			self.text.render(display, "P-" + str(player.getId()) + " Score :" + str(player.getPoint()),420, ((player.getId()+1) * 15)+25)
 
 	# generate energy and breakas
 	def generate_map(self):
