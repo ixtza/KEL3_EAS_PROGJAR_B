@@ -93,6 +93,14 @@ while running:
 			for brk in arena.getBreaks():
 				if player.getX() == brk.getX() and player.getY() == brk.getY():
 					gamecontroller.addEliminated(gamecontroller.getturn())
+				if player.getX() == brk.getX() - 32 and player.getY() == brk.getY() - 32:
+					print("Warning! There's a break near you, Player " + str(player.id + 1) + "!")
+				if player.getX() == brk.getX() - 32 and player.getY() == brk.getY() + 32:
+					print("Warning! There's a break near you, Player " + str(player.id + 1) + "!")
+				if player.getX() == brk.getX() + 32 and player.getY() == brk.getY() - 32:
+					print("Warning! There's a break near you, Player " + str(player.id + 1) + "!")
+				if player.getX() == brk.getX() + 32 and player.getY() == brk.getY() + 32:
+					print("Warning! There's a break near you, Player " + str(player.id + 1) + "!")
 			for energy in arena.getEnergys():
 				if player.getX() == energy.getX() and player.getY() == energy.getY():
 					point = 6
@@ -103,6 +111,14 @@ while running:
 					point = -4
 					player.setPoint(player.getPoint() + point)
 					print("Player " + str(player.id + 1) + " get " + str(point) + " loss.")
+				if player.getX() == loss.getX() - 32 and player.getY() == loss.getY():
+					print("Caution! There's a loss near you, Player " + str(player.id + 1) + "!")
+				if player.getX() == loss.getX() and player.getY() == loss.getY() + 32:
+					print("Caution! There's a loss near you, Player " + str(player.id + 1) + "!")
+				if player.getX() == loss.getX() + 32 and player.getY() == loss.getY():
+					print("Caution! There's a loss near you, Player " + str(player.id + 1) + "!")
+				if player.getX() == loss.getX() and player.getY() == loss.getY() - 32:
+					print("Caution! There's a loss near you, Player " + str(player.id + 1) + "!")
 			if player.getX() == 160 and player.getY() == 160:
 				gamecontroller.addEliminated(gamecontroller.getturn())
 
