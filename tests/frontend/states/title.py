@@ -2,15 +2,16 @@ from states.state import State
 from states.game_world import Game_World
 
 class Title(State):
-	def __init__(self, game):
-		State.__init__(self, game)
-		
+	def __init__(self, game, conn):
+		State.__init__(self, game, conn)
 
 	def update(self, delta_time, actions):
-		if actions["start"]:
-			new_state = Game_World(self.game)
+		play_signal = self.conn.waitAllPlayers()
+		if play_signal:
+			new_state = Game_World(self.game,self.conn)
 			new_state.enter_state()
-		self.game.reset_keys()
+			self.game.reset_keys()
+		else: self.game.force_exit()
 
 	def render(self, display):
 		display.fill((255,255,255))

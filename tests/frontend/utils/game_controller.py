@@ -1,8 +1,9 @@
 class GameController:
 
 
-	def __init__(self, turn):
-		self.turn = turn
+	def __init__(self, conn):
+		self.conn = conn
+		self.turn = 0
 		# mengubah global var ke atribut entitas
 		self.eliminated = []
 
@@ -10,6 +11,7 @@ class GameController:
 	TODO getturn dari server?
 	"""
 	def getturn(self):
+		self.turn = self.conn.getTurn(self.turn) - 1
 		return self.turn
 
 	def nextturn(self):

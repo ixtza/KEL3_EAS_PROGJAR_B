@@ -36,20 +36,25 @@ class Server:
 		input = [self.server]
 		self.running = True
 		manager = self.manager(self.clientManager)
-		while self.running:
-			inputready, outputready, exceptready = select.select(input,[],[])
+		try:
+			while self.running:
+				inputready, outputready, exceptready = select.select(input,[],[])
 
-			for s in inputready:
-				if s == self.server:
-					# handle the server socket
-					client_socket, client_address = self.server.accept() # revise
-					manager.push(client_socket,client_address)
-					# self.threads.append(c)
-				elif s == sys.stdin:
-					# handle standard input
-					junk = sys.stdin.readline()
-					manager.stop()
-					self.running = False
+				for s in inputready:
+					if s == self.server:
+						# handle the server socket
+						client_socket, client_address = self.server.accept() # revise
+						manager.push(client_socket,client_address)
+						# self.threads.append(c)
+					elif s == sys.stdin:
+						# handle standard input
+						junk = sys.stdin.readline()
+						manager.stop()
+						self.running = False
+		except Exception as e:
+			print(e)
+			self.server.close()
+		finally: self.server.close()
 
 
 	 # close all threads

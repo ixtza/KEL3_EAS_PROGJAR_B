@@ -1,7 +1,8 @@
 class State():
-    def __init__(self, game):
+    def __init__(self, game, conn):
         self.game = game
         self.prev_state = None
+        self.conn = conn
 
     def update(self, delta_time, actions):
         pass

@@ -1,10 +1,11 @@
 import pygame
 
 class Break(pygame.sprite.Sprite):
-	def __init__(self, img, x, y):
+	def __init__(self, img, x, y, conn):
 		self.img = img
 		self.x = x
 		self.y = y
+		self.conn = conn
 
 		# tricked so that player's point whose already fell
 		# into the trap becomes negative

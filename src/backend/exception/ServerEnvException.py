@@ -1,4 +1,4 @@
-from ServerException import ServerException
+from exception.ServerException import ServerException
 
 class ServerEnvException(ServerException):
 	def test(self):

@@ -1,10 +1,11 @@
 import pygame
 
 class Energy:
-	def __init__(self, img, x, y):
+	def __init__(self, img, x, y, conn):
 		self.img = img
 		self.x = x
 		self.y = y
+		self.conn = conn
 
 		# collision
 		self.rect = pygame.Rect(x, y, 32, 32)

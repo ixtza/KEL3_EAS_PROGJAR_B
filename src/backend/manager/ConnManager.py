@@ -1,8 +1,8 @@
 import threading
 import pickle
 from io import BytesIO
-from ..controller.PlayerConn import PlayerConn
-from RoomManager import RoomManager
+from controller.PlayerConn import PlayerConn
+from manager.RoomManager import RoomManager
 
 class ConnManager():
 	def __init__(self, clientManager, silent=False):

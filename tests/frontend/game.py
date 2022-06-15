@@ -1,4 +1,6 @@
+import sys
 import pygame, os , time
+from conn.Client import Client
 
 # Title state
 from states.title import Title
@@ -8,7 +10,8 @@ class Game():
 		pygame.init()
 
 		self.GAME_W,self.GAME_H = 528, 416
-		self.SCREEN_W,self.SCREEN_H = 800, 600
+		# self.SCREEN_W,self.SCREEN_H = 800, 600
+		self.SCREEN_W,self.SCREEN_H = 528, 416
 		self.game_canvas = pygame.Surface((self.GAME_W,self.GAME_H))
 		self.display = pygame.display.set_mode((self.SCREEN_W,self.SCREEN_H))
 		self.running, self.playing = True, True
@@ -22,7 +25,8 @@ class Game():
 			"action1" : False, 
 			"action2" : False, 
 			"start" : False
-			}
+		}
+
 		self.state_stack = []
 		self.BLACK, self.WHITE = (0,0,0),(255,255,255)
 
@@ -32,6 +36,9 @@ class Game():
 		# load assets
 		self.load_assets()
 
+		# connect to server
+		self.conn = Client(self)
+
 		# load states
 		self.load_states()
 
@@ -39,6 +46,7 @@ class Game():
 		self.clock = pygame.time.Clock()
 
 	def game_loop(self):
+		self.conn.start()
 		while self.playing:
 			self.get_dt()
 			self.get_events()
@@ -51,6 +59,7 @@ class Game():
 			if event.type == pygame.QUIT:
 				self.playing = False
 				self.running = False
+				self.force_exit()
 			if event.type == pygame.KEYDOWN:
 				self.actions['keyup'] = False
 				self.actions['keydown'] = True
@@ -122,9 +131,16 @@ class Game():
 		pass
 
 	def load_states(self):
-		self.title_screen = Title(self)
+		self.title_screen = Title(self, self.conn)
 		self.state_stack.append(self.title_screen)
 
 	def reset_keys(self):
 		for action in self.actions:
 			self.actions[action] = False
+
+	def force_exit(self):
+		self.playing = False
+		self.running = False
+		self.conn.close()
+		pygame.quit()
+		sys.exit(-1)

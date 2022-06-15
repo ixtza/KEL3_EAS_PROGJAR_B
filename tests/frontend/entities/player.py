@@ -1,10 +1,12 @@
 import pygame, os
 
 class Player(pygame.sprite.Sprite):
-	def __init__(self, game, id, x, y):
+	def __init__(self, game, id, x, y, turn, conn):
 		pygame.sprite.Sprite.__init__(self)
 
 		self.game = game
+		self.turn = turn
+		self.conn = conn
 
 		self.sprite = os.path.join(self.game.player_dir,"model_move.png")
 
@@ -41,6 +43,8 @@ class Player(pygame.sprite.Sprite):
 
 		# Flag untuk mengganti giliran player
 		self.is_turn = False
+		self.doing_server_movement = None
+		self.LOGS = {}
 
 	def isOutsideArea(self):
 		if self.x + self.newX < 0:
@@ -90,6 +94,9 @@ class Player(pygame.sprite.Sprite):
 		return image
 
 	def update(self, deltaTime, actions, players):
+		print("update for " + str(self.turn))
+		self.LOGS[str((self.turn, self.moving, self.doing_server_movement))] = True
+		# print(self.LOGS)
 		if self.is_alive:
 			change = self.check_movement(actions)
 			self.check_collision(players)
@@ -104,15 +111,31 @@ class Player(pygame.sprite.Sprite):
 	def render(self, display):
 		if self.newX == 0 and self.newY == 0:
 			self.moving = False
+			display.blit(self.animList[self.animMode][self.currentFrame], (self.x,self.y))
+			return True if self.is_turn else False # animasi selesai
+
 		display.blit(self.animList[self.animMode][self.currentFrame], (self.x,self.y))
+		return False # tidak ada animasi atau animasi belum selesai
 
 	def alive(self):
 		if self.point < 1:
 			self.is_alive = False
 
-	def check_movement(self, actions):
-		if actions['keydown'] == True and self.moving == False and self.is_turn == False:
+	def check_movement(self, actions, from_server=False):
+		# print("check movement: " + str(self.turn))
+
+		"""
+		Jika bukan turn dan fungsi dipanggil dari main loop,
+		kembalikan status change dari nilai doing_server_movement
+		"""
+		# if self.conn.our_player_turn != self.turn and not from_server:
+		# 	print(str(self.turn) + ": turn from server")
+		# else:
+		# 	print("your turn: " + str(self.turn))
+
+		if (self.conn.our_player_turn == self.turn or from_server) and actions['keydown'] == True and self.moving == False and self.is_turn == False:
 			self.moving = True
+			if from_server: self.doing_server_movement = True
 			if actions['left'] == True:
 				self.facing = 'left'
 				self.animMode = 2
@@ -135,8 +158,19 @@ class Player(pygame.sprite.Sprite):
 				return False
 			self.is_turn = True
 			self.point -= 1
+
 			return False
-		if actions['keyup'] == True and self.moving == False:
+
+			# elif not from_server: return True
+
+		if (actions['keyup'] == True or self.doing_server_movement) and self.moving == False:
+			"""
+			Setelah melepas tombol gerakan, kirim data gerakan ke seluruh pemain
+			"""
+			if self.conn.our_player_turn == self.turn and self.facing != None:
+				self.conn.sendAction(self.facing)
+
+			self.doing_server_movement = False
 			self.facing = None
 			self.newX = 0
 			self.newY = 0
@@ -202,3 +236,4 @@ class Player(pygame.sprite.Sprite):
 		
 		# Update player rect
 		self.rect.update(self.x,self.y,32,32)
+		# print("animate: " + str((self.newX, self.newY)))

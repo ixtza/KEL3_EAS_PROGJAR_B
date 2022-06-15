@@ -3,12 +3,12 @@ from states.state import State
 from entities.arena import Arena
 
 class Game_World(State):
-	def __init__(self, game):
-		State.__init__(self,game)
+	def __init__(self, game, conn):
+		State.__init__(self,game,conn)
 
 		# inisiasi map sebagai list room
 		self.arenas = []
-		self.arenas.append(Arena(self.game))
+		self.arenas.append(Arena(self.game, self.conn)) # TODO kenapa array?
 
 	# update sebagai pengatur nilai object (letak, dls)
 	def update(self, delta_time, actions):
