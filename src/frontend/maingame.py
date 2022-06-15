@@ -1,3 +1,4 @@
+from pickle import FALSE
 from re import L
 import pygame
 
@@ -45,6 +46,10 @@ players.append(Player.Player(pygame.image.load(
 players.append(Player.Player(pygame.image.load(
     work_dir+"/assets/model/model_move.png").convert_alpha(), 3, 320, 320))
 
+#trap marker
+break_marker = False
+loss_marker = False
+
 #text
 text = Text.Text(work_dir+"/assets/fonts/ROCK.TTF", 14)
 
@@ -90,17 +95,31 @@ while running:
          )
 
 			#check for break, energy, and finish
+			break_marker = False
+			loss_marker = False
+			savePlayerId_GotBreak = 0
+			savePlayerId_GotLoss = 0
+
 			for brk in arena.getBreaks():
 				if player.getX() == brk.getX() and player.getY() == brk.getY():
 					gamecontroller.addEliminated(gamecontroller.getturn())
+					text.print(screen, "Player " + str(player.id + 1) + " gets a break!", 250, 470)
 				if player.getX() == brk.getX() - 32 and player.getY() == brk.getY() - 32:
 					print("Warning! There's a break near you, Player " + str(player.id + 1) + "!")
+					savePlayerId_GotBreak = player.id + 1
+					break_marker = True
 				if player.getX() == brk.getX() - 32 and player.getY() == brk.getY() + 32:
 					print("Warning! There's a break near you, Player " + str(player.id + 1) + "!")
+					savePlayerId_GotBreak = player.id + 1
+					break_marker = True
 				if player.getX() == brk.getX() + 32 and player.getY() == brk.getY() - 32:
 					print("Warning! There's a break near you, Player " + str(player.id + 1) + "!")
+					savePlayerId_GotBreak = player.id + 1
+					break_marker = True
 				if player.getX() == brk.getX() + 32 and player.getY() == brk.getY() + 32:
 					print("Warning! There's a break near you, Player " + str(player.id + 1) + "!")
+					savePlayerId_GotBreak = player.id + 1
+					break_marker = True
 			for energy in arena.getEnergys():
 				if player.getX() == energy.getX() and player.getY() == energy.getY():
 					point = 6
@@ -111,14 +130,23 @@ while running:
 					point = -4
 					player.setPoint(player.getPoint() + point)
 					print("Player " + str(player.id + 1) + " get " + str(point) + " loss.")
+					text.print(screen, "Player " + str(player.id + 1) + " get " + str(point) + " loss.", 250, 485)
 				if player.getX() == loss.getX() - 32 and player.getY() == loss.getY():
 					print("Caution! There's a loss near you, Player " + str(player.id + 1) + "!")
+					savePlayerId_GotLoss = player.id + 1
+					loss_marker = True
 				if player.getX() == loss.getX() and player.getY() == loss.getY() + 32:
 					print("Caution! There's a loss near you, Player " + str(player.id + 1) + "!")
+					savePlayerId_GotLoss = player.id + 1
+					loss_marker = True
 				if player.getX() == loss.getX() + 32 and player.getY() == loss.getY():
 					print("Caution! There's a loss near you, Player " + str(player.id + 1) + "!")
+					savePlayerId_GotLoss = player.id + 1
+					loss_marker = True
 				if player.getX() == loss.getX() and player.getY() == loss.getY() - 32:
 					print("Caution! There's a loss near you, Player " + str(player.id + 1) + "!")
+					savePlayerId_GotLoss = player.id + 1
+					loss_marker = True
 			if player.getX() == 160 and player.getY() == 160:
 				gamecontroller.addEliminated(gamecontroller.getturn())
 
@@ -150,5 +178,11 @@ while running:
 		player.render(screen)
 		text.print(screen, "Player " + str(player.getId()) + " Score :" + str(player.getPoint()), 64, Ytext)
 
-	text.print(screen, "Player " + str(gamecontroller.getturn() + 1) + "'s Turn", 260, 430)
+	text.print(screen, "Player " + str(gamecontroller.getturn() + 1) + "'s Turn", 250, 425)
+	
+	if break_marker == True:
+		text.print(screen, "Break near Player " + str(savePlayerId_GotBreak), 250, 440)
+	if loss_marker == True:
+		text.print(screen, "Loss near Player " + str(savePlayerId_GotLoss), 250, 455)
+
 	pygame.display.update()
