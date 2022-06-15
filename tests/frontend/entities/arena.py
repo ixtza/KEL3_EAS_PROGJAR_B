@@ -4,6 +4,7 @@ from entities.energy import Energy
 from entities.breaks import Break
 from entities.loss import Loss
 from utils.game_controller import GameController
+from utils.score_board import Text
 
 class Arena():
 	def __init__(self, game, conn):
@@ -76,6 +77,10 @@ class Arena():
 		self.changeTurn = False
 		self.frame = 0
 
+		# socre board text position
+		self.text = Text(os.path.join(self.game.font_dir, "PressStart2P-vaV7.ttf"),13)
+		self.Ytext = 0
+
 	# update sebagai pengatur nilai object (letak, dls)
 	def update(self, delta_time, actions):
 		for i in range(self.num_of_breaks):
@@ -128,6 +133,7 @@ class Arena():
 
 		for player in self.players:
 			player.render(display)
+			self.text.render(display, "P-" + str(player.getId()) + " Score :" + str(player.getPoint()),440, (player.getId()+1) * 15)
 
 	# generate energy and breakas
 	def generate_map(self):
