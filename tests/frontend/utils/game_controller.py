@@ -16,7 +16,7 @@ class GameController:
 
 	def nextturn(self):
 		self.turn = (self.turn + 1) % 4
-		while self.turn in self.eliminated and len(self.eliminated) is not 4:
+		while self.turn in self.eliminated and len(self.eliminated) != 4:
 			self.turn = (self.turn + 1) % 4
 
 	def getEliminated(self):

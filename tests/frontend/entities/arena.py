@@ -23,9 +23,12 @@ class Arena():
 				"loss": None,
 				"breaks": None,
 				"energys": None,
-				"num_of_breaks": 12,
-				"num_of_energys": 12,
-				"num_of_loss": 12,
+				"num_of_breaks": 0,
+				"num_of_energys": 0,
+				"num_of_loss": 0,
+				# "num_of_breaks": 12,
+				# "num_of_energys": 12,
+				# "num_of_loss": 12,
 			}
 
 		# id game buat unique untuk server nanti
@@ -49,6 +52,8 @@ class Arena():
 			player = Player(self.game, uid,p[0],p[1], turn, self.conn)
 			self.players.insert(turn - 1, player)
 			players_id_turn_data[uid]["object"] = player
+			print(str(i) + ": " + str(uid))
+			print([p.id for p in self.players])
 
 		# generate map permainan
 		if self.conn.isRoomHost():
@@ -60,17 +65,18 @@ class Arena():
 			arena_configuration["energys"] = [(e.x // 32, e.y // 32) for e in self.energys]
 			self.conn.broadcastArenaConfig(arena_configuration)
 		else:
-			for l in arena_configuration["loss"]:
-				self.loss.append(Loss(pygame.image.load(
-					self.game.work_dir + "/assets/loss/loss.png"), l[0] * 32, l[1] * 32, self.conn))
+			pass
+			# for l in arena_configuration["loss"]:
+			# 	self.loss.append(Loss(pygame.image.load(
+			# 		self.game.work_dir + "/assets/loss/loss.png"), l[0] * 32, l[1] * 32, self.conn))
 
-			for b in arena_configuration["breaks"]:
-				self.breaks.append(Break(pygame.image.load(
-					self.game.work_dir + "/assets/break/break.png"), b[0] * 32, b[1] * 32, self.conn))
+			# for b in arena_configuration["breaks"]:
+			# 	self.breaks.append(Break(pygame.image.load(
+			# 		self.game.work_dir + "/assets/break/break.png"), b[0] * 32, b[1] * 32, self.conn))
 
-			for e in arena_configuration["energys"]:
-				self.energys.append(Energy(pygame.image.load(
-					self.game.work_dir + "/assets/energy/energy.png"), e[0] * 32, e[1] * 32, self.conn))
+			# for e in arena_configuration["energys"]:
+			# 	self.energys.append(Energy(pygame.image.load(
+			# 		self.game.work_dir + "/assets/energy/energy.png"), e[0] * 32, e[1] * 32, self.conn))
 
 		# game controller, yang berfungsi untuk menghandle game logic dan mendapat data dari server
 		self.playerTurn = self.game_controller.getturn()
@@ -94,13 +100,13 @@ class Arena():
 
 		self.changeTurn = self.players[self.playerTurn].update(delta_time,actions,self.players)
 		if self.changeTurn:
-			# os.system('cls')
-			# print("Current Turn: "+ str(self.playerTurn+1) +"\nCurrent score status: \n"
-			#                     'Player '+ str(self.players[0].id) + ' :' + str(self.players[0].getPoint()) + '-' + str(self.players[0].is_alive) + "\n"
-			#                     'Player '+ str(self.players[1].id) + ' :' + str(self.players[1].getPoint()) + '-' + str(self.players[1].is_alive) + "\n"
-			#                     'Player '+ str(self.players[2].id) + ' :' + str(self.players[2].getPoint()) + '-' + str(self.players[2].is_alive) + "\n"
-			#                     'Player '+ str(self.players[3].id) + ' :' + str(self.players[3].getPoint()) + '-' + str(self.players[3].is_alive) 
-			# )
+			os.system('clear')
+			print("Current Turn: "+ str(self.playerTurn+1) +"\nCurrent score status: \n"
+			                    'Player '+ str(self.players[0].id) + ' :' + str(self.players[0].getPoint()) + '-' + str(self.players[0].is_alive) + "\n"
+			                    'Player '+ str(self.players[1].id) + ' :' + str(self.players[1].getPoint()) + '-' + str(self.players[1].is_alive) + "\n"
+			                    'Player '+ str(self.players[2].id) + ' :' + str(self.players[2].getPoint()) + '-' + str(self.players[2].is_alive) + "\n"
+			                    'Player '+ str(self.players[3].id) + ' :' + str(self.players[3].getPoint()) + '-' + str(self.players[3].is_alive) 
+			)
 			# mengganti turn player, ketika is_alive player false, maka akan langsung otomastis switch ke giliran selanjutnya
 
 			print("this player ready")
@@ -133,7 +139,7 @@ class Arena():
 
 		for player in self.players:
 			player.render(display)
-			self.text.render(display, "P-" + str(player.getId()) + " Score :" + str(player.getPoint()),440, (player.getId()+1) * 15)
+			self.text.render(display, "P-" + str(player.turn) + " Score :" + str(player.getPoint()),440, (player.turn+1) * 15)
 
 	# generate energy and breakas
 	def generate_map(self):

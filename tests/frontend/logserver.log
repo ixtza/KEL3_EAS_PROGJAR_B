@@ -1,0 +1,76 @@
+5a4e3219-f636-4f4f-8988-b82fd6e03e7d running
+send player_enter to player 1
+91f909e4-51db-4522-9c11-5d85da808272 running
+send player_enter to player 1
+send player_enter to player 2
+26609a7b-6d92-4db2-b2bb-c7945581c701 running
+send player_enter to player 1
+send player_enter to player 2
+send player_enter to player 3
+d950419c-61a9-4235-8f3a-6e241b7cd04d running
+RECV BROADCAST ARENA CONFIG
+BROADCASTED ARENA CONFIG
+player 5a4e3219-f636-4f4f-8988-b82fd6e03e7d ready
+player 91f909e4-51db-4522-9c11-5d85da808272 ready
+player 26609a7b-6d92-4db2-b2bb-c7945581c701 ready
+player d950419c-61a9-4235-8f3a-6e241b7cd04d ready
+turn now 2
+all player ready
+player 91f909e4-51db-4522-9c11-5d85da808272 ready
+player 26609a7b-6d92-4db2-b2bb-c7945581c701 ready
+player 5a4e3219-f636-4f4f-8988-b82fd6e03e7d ready
+player d950419c-61a9-4235-8f3a-6e241b7cd04d ready
+turn now 3
+all player ready
+player 26609a7b-6d92-4db2-b2bb-c7945581c701 ready
+player 91f909e4-51db-4522-9c11-5d85da808272 ready
+player d950419c-61a9-4235-8f3a-6e241b7cd04d ready
+player 5a4e3219-f636-4f4f-8988-b82fd6e03e7d ready
+turn now 4
+all player ready
+player d950419c-61a9-4235-8f3a-6e241b7cd04d ready
+player 91f909e4-51db-4522-9c11-5d85da808272 ready
+player 26609a7b-6d92-4db2-b2bb-c7945581c701 ready
+player 5a4e3219-f636-4f4f-8988-b82fd6e03e7d ready
+turn now 1
+all player ready
+player 5a4e3219-f636-4f4f-8988-b82fd6e03e7d ready
+player 91f909e4-51db-4522-9c11-5d85da808272 ready
+player 26609a7b-6d92-4db2-b2bb-c7945581c701 ready
+player d950419c-61a9-4235-8f3a-6e241b7cd04d ready
+turn now 2
+all player ready
+player 91f909e4-51db-4522-9c11-5d85da808272 ready
+player d950419c-61a9-4235-8f3a-6e241b7cd04d ready
+player 26609a7b-6d92-4db2-b2bb-c7945581c701 ready
+player 5a4e3219-f636-4f4f-8988-b82fd6e03e7d ready
+turn now 3
+all player ready
+player 26609a7b-6d92-4db2-b2bb-c7945581c701 ready
+player 91f909e4-51db-4522-9c11-5d85da808272 ready
+player d950419c-61a9-4235-8f3a-6e241b7cd04d ready
+player 5a4e3219-f636-4f4f-8988-b82fd6e03e7d ready
+turn now 4
+all player ready
+player d950419c-61a9-4235-8f3a-6e241b7cd04d ready
+player 5a4e3219-f636-4f4f-8988-b82fd6e03e7d ready
+player 91f909e4-51db-4522-9c11-5d85da808272 ready
+player 26609a7b-6d92-4db2-b2bb-c7945581c701 ready
+turn now 1
+all player ready
+player 5a4e3219-f636-4f4f-8988-b82fd6e03e7d ready
+player d950419c-61a9-4235-8f3a-6e241b7cd04d ready
+player 91f909e4-51db-4522-9c11-5d85da808272 ready
+player 26609a7b-6d92-4db2-b2bb-c7945581c701 ready
+turn now 2
+all player ready
+player 91f909e4-51db-4522-9c11-5d85da808272 ready
+5a4e3219-f636-4f4f-8988-b82fd6e03e7d stopped
+91f909e4-51db-4522-9c11-5d85da808272 stopped
+Exception in thread Thread-141 (send):
+26609a7b-6d92-4db2-b2bb-c7945581c701 stopped
+Traceback (most recent call last):
+  File "/usr/lib64/python3.10/threading.py", line 1009, in _bootstrap_inner
+d950419c-61a9-4235-8f3a-6e241b7cd04d stopped
+{}
+{}

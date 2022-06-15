@@ -33,7 +33,7 @@ class Client(threading.Thread):
     def sendRequest(self, request):
         def send():
             self.conn.sendall(pickle.dumps(request))
-            # print('finish send ' + str(request))
+            print('finish send ' + str(request))
 
         if self.running:
             threading.Thread(target=send).start()
@@ -70,8 +70,18 @@ class Client(threading.Thread):
 
     def waitAllPlayerReady(self):
         self.sendRequest(["player_ready", self.our_player_id, None])
+        retry = 0
+        timeout = 10
         while not self.all_player_ready:
-            time.sleep(0.1)
+            retry += 1
+            time.sleep(0.1 * retry)
+            if 0.1 * retry >= timeout: break
+
+        while not self.all_player_ready:
+            # self.sendRequest(["ask_all_player_ready", self.our_player_id, None])
+            self.sendRequest(["player_ready", self.our_player_id, None])
+            time.sleep(3)
+
         self.all_player_ready = False
         return
 
@@ -120,7 +130,7 @@ class Client(threading.Thread):
         print('client closed')
 
     def responseHandler(self, resp):
-        # print(str(resp))
+        print(str(resp))
         if resp[0] == "your_id":
             self.our_player_id = resp[2]
             self.connected_players[self.our_player_id] = {}
@@ -154,6 +164,8 @@ class Client(threading.Thread):
             # obj = self.connected_players[resp[1]]["object"]
             # threading.Thread(target=obj.check_movement, args=(keydown_action, True))
             self.connected_players[resp[1]]["object"].check_movement(keydown_action, True)
+        elif resp[0] == "player_need_ready":
+            pass
         elif resp[0] == "end_game":
             if resp[2][0] == "player_leave":
                 self.game.force_exit()
@@ -162,33 +174,33 @@ class Client(threading.Thread):
         self.open_socket()
         self.running = True
 
-        # try:
-        while self.running:
-            packet = self.conn.recv(1024)
-            # if self.packetEmpty(packet):
-            #     self.running = False
-            #     break
-            data = BytesIO()
-            loaded_data = []
-            ptr = 0
-            while packet:
-                data.seek(0, 2)
-                data.write(packet)
-                try:
-                    while True:
-                        data.seek(ptr)
-                        loaded_data.append(pickle.load(data))
-                        ptr = data.tell()
-                except:
-                    """
-                    Pickle tidak bisa load, asumsi bahwa
-                    paket belum sempurna.
-                    Asumsi bahwa loaded_data bisa berisi bisa tidak
-                    """
-                    for d in loaded_data:
-                        self.responseHandler(d)
-                        loaded_data.remove(d)
-
+        try:
+            while self.running:
                 packet = self.conn.recv(1024)
+                # if self.packetEmpty(packet):
+                #     self.running = False
+                #     break
+                data = BytesIO()
+                loaded_data = []
+                ptr = 0
+                while packet:
+                    data.seek(0, 2)
+                    data.write(packet)
+                    try:
+                        while True:
+                            data.seek(ptr)
+                            loaded_data.append(pickle.load(data))
+                            ptr = data.tell()
+                    except:
+                        """
+                        Pickle tidak bisa load, asumsi bahwa
+                        paket belum sempurna.
+                        Asumsi bahwa loaded_data bisa berisi bisa tidak
+                        """
+                        for d in loaded_data:
+                            self.responseHandler(d)
+                            loaded_data.remove(d)
+
+                    packet = self.conn.recv(1024)
         # except:  self.close()
-        # finally: self.close()
+        finally: self.game.force_exit()

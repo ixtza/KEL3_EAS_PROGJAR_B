@@ -37,7 +37,8 @@ class Player(pygame.sprite.Sprite):
 		self.is_alive = True
 
 		# point
-		self.point = 5
+		# self.point = 5
+		self.point = 2
 
 		self.load_sprites()
 
@@ -94,10 +95,10 @@ class Player(pygame.sprite.Sprite):
 		return image
 
 	def update(self, deltaTime, actions, players):
-		print("update for " + str(self.turn))
+		# print("update for " + str(self.turn))
 		self.LOGS[str((self.turn, self.moving, self.doing_server_movement))] = True
 		# print(self.LOGS)
-		if self.is_alive:
+		if self.is_alive or actions['keyup']:
 			change = self.check_movement(actions)
 			self.check_collision(players)
 			self.animate(deltaTime)
@@ -122,7 +123,8 @@ class Player(pygame.sprite.Sprite):
 			self.is_alive = False
 
 	def check_movement(self, actions, from_server=False):
-		# print("check movement: " + str(self.turn))
+		if not actions['keyup'] and (not self.is_alive or self.point <= 0): return
+		# print("check movement: " + str((self.turn, self.is_alive)))
 
 		"""
 		Jika bukan turn dan fungsi dipanggil dari main loop,

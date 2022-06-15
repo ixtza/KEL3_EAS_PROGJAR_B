@@ -124,6 +124,7 @@ class Game():
 	def load_assets(self):
 		# Create pointers to directories 
 		self.work_dir = os.path.dirname(os.path.realpath(__file__))
+		print(self.work_dir)
 		self.assets_dir = os.path.join(self.work_dir,"assets")
 		self.player_dir = os.path.join(self.assets_dir, "player")
 		self.font_dir = os.path.join(self.assets_dir, "font")
