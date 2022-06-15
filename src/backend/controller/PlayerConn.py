@@ -74,6 +74,11 @@ class PlayerConn(threading.Thread):
 			self.roomManager.broadcastAction(self, req[2])
 		elif req[0] == "ask_all_player_ready":
 			self.roomManager.askAllReady(self)
+		elif req[0] == "ask_arena_config":
+			self.roomManager.sendArenaConfig(self)
+		elif req[0] == "sync_player_state":
+			print("receive sync from " + str(self.id) + ": " + str(req[2]))
+			self.roomManager.syncPlayerState(self, req[2])
 
 	def run(self):
 		self.running = True

@@ -37,7 +37,7 @@ class Player(pygame.sprite.Sprite):
 		self.is_alive = True
 
 		# point
-		self.point = 5
+		self.point = 99999
 			
 
 		self.load_sprites()
@@ -46,6 +46,12 @@ class Player(pygame.sprite.Sprite):
 		self.is_turn = False
 		self.doing_server_movement = None
 		self.LOGS = {}
+		self.stateSync = {
+			"x": self.x,
+			"y": self.y,
+			"facing": self.facing,
+			"point": self.point
+		}
 
 	def isOutsideArea(self):
 		if self.x + self.newX < 0:
@@ -99,6 +105,19 @@ class Player(pygame.sprite.Sprite):
 			change = self.check_movement(actions)
 			self.check_collision(players)
 			self.animate(deltaTime)
+			# if self.conn.our_player_turn == self.turn and self.moving == False and self.stateSync["facing"] != None and (
+			# 	self.x != self.stateSync["x"]
+			# 	or self.y != self.stateSync["y"]
+			# 	or self.facing != self.stateSync["facing"]
+			# 	or self.point != self.stateSync["point"]
+			# ):
+			# 	self.stateSync = {
+			# 		"x": self.x,
+			# 		"y": self.y,
+			# 		"facing": self.facing,
+			# 		"point": self.point
+			# 	}
+			# 	self.conn.syncPlayer(self.stateSync)
 			return change
 		if self.is_alive == False:
 			self.animMode = 0
@@ -108,6 +127,17 @@ class Player(pygame.sprite.Sprite):
 
 	def render(self, display):
 		if self.newX == 0 and self.newY == 0:
+			# if self.conn.our_player_turn != self.turn and (
+			# 	self.x != self.stateSync["x"]
+			# 	or self.y != self.stateSync["y"]
+			# 	or self.facing != self.stateSync["facing"]
+			# 	or self.point != self.stateSync["point"]
+			# ):
+			# 	self.x = self.stateSync["x"]
+			# 	self.y = self.stateSync["y"]
+			# 	self.facing = self.stateSync["facing"]
+			# 	self.point = self.stateSync["point"]
+
 			self.moving = False
 			display.blit(self.animList[self.animMode][self.currentFrame], (self.x,self.y))
 			return True if self.is_turn else False # animasi selesai
@@ -222,3 +252,7 @@ class Player(pygame.sprite.Sprite):
 		# Update player rect
 		self.rect.update(self.x,self.y,32,32)
 		# print("animate: " + str((self.newX, self.newY)))
+
+	def syncFromServer(self, state):
+		print(str(self.turn) + " got sync: " + str(state))
+		self.stateSync = state

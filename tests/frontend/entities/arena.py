@@ -23,12 +23,12 @@ class Arena():
 				"loss": None,
 				"breaks": None,
 				"energys": None,
-				# "num_of_breaks": 0,
-				# "num_of_energys": 0,
-				# "num_of_loss": 0,
-				"num_of_breaks": 12,
-				"num_of_energys": 12,
-				"num_of_loss": 12,
+				"num_of_breaks": 0,
+				"num_of_energys": 0,
+				"num_of_loss": 0,
+				# "num_of_breaks": 12,
+				# "num_of_energys": 12,
+				# "num_of_loss": 12,
 			}
 
 		# id game buat unique untuk server nanti
@@ -93,7 +93,10 @@ class Arena():
 		self.ongoing = True
 
 		# set window title
-		pygame.display.set_caption('Player ' + str(self.conn.our_player_turn))
+		if self.conn.our_player_turn == 0:
+			pygame.display.set_caption('Tap Treasure - Player ' + str(self.conn.our_player_turn) + " - Your Turn")
+		else:
+			pygame.display.set_caption('Tap Treasure - Player ' + str(self.conn.our_player_turn))
 
 	# update sebagai pengatur nilai object (letak, dls)
 	def update(self, delta_time, actions):
@@ -122,7 +125,13 @@ class Arena():
 			self.conn.waitAllPlayerReady(self.players[self.conn.our_player_turn - 1].is_alive)
 			print("NOTICE: all player ready")
 			self.playerTurn = self.game_controller.getturn()
-			if self.playerTurn+1 == self.conn.our_player_turn: print("NOTICE: your turn")
+
+			if self.playerTurn+1 == self.conn.our_player_turn:
+				print("NOTICE: your turn")
+				pygame.display.set_caption('Tap Treasure - Player ' + str(self.conn.our_player_turn) + " - Your Turn")
+			else:
+				pygame.display.set_caption('Tap Treasure - Player ' + str(self.conn.our_player_turn))
+
 			if self.players[self.playerTurn].is_alive == False:
 				self.game_controller.addEliminated(self.players[self.playerTurn].turn)
 				if len(self.game_controller.getEliminated()) == 4:
@@ -132,6 +141,9 @@ class Arena():
 
 			if self.check_finish(self.players[self.playerTurn]):
 				print('Player '+str(self.players[self.playerTurn].id)+' menang!')
+				if self.playerTurn+1 == self.conn.our_player_turn:
+					print("NOTICE: your turn")
+					pygame.display.set_caption('Tap Treasure - Player ' + str(self.conn.our_player_turn) + " - You Win")
 				for player in self.players:
 					player.is_alive = False
 				# kirim tanda apapun bahwa game telah berakhir

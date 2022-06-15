@@ -40,8 +40,15 @@ class Client(threading.Thread):
             threading.Thread(target=send).start()
 
     def getArenaConfig(self):
+        retry = 0
+        delay = 0.1
+        timeout = 5
         while not self.arena_config and self.running:
-            time.sleep(0.1)
+            retry += 1
+            time.sleep(retry * delay)
+            if retry * delay >= timeout:
+                self.sendRequest(['ask_arena_config', None, None])
+                retry = 0
 
         return self.arena_config
 
@@ -78,6 +85,9 @@ class Client(threading.Thread):
         self.all_player_ready = False
         return
 
+    def syncPlayer(self, player_state):
+        self.sendRequest(["sync_player_state", self.our_player_id, player_state])
+
     def sendReady(self):
         self.sendRequest(["player_ready", self.our_player_id, None])
 
@@ -96,10 +106,10 @@ class Client(threading.Thread):
 
     def getTurn(self, current_turn):
         self.sendRequest(["get_turn", None, None])
-        while not self.current_player_turn_buff:
+        while not self.current_player_turn_buff and self.running:
             time.sleep(0.1)
 
-        if self.current_player_turn_buff == 0:
+        if self.current_player_turn_buff == 0 and self.running:
             self.current_player_turn_buff = None
             return self.getTurn()
 
@@ -160,6 +170,9 @@ class Client(threading.Thread):
             self.connected_players[resp[1]]["object"].check_movement(keydown_action, True)
         elif resp[0] == "player_need_ready":
             pass
+        elif resp[0] == "sync_player_state":
+            # print(str(self.our_player_turn) + " got sync: " + str(resp[2]))
+            self.connected_players[resp[1]]["object"].syncFromServer(resp[2])
         elif resp[0] == "end_game":
             if resp[2][0] == "player_leave":
                 self.game.force_exit()
@@ -198,5 +211,5 @@ class Client(threading.Thread):
                             loaded_data.remove(d)
 
                     packet = self.conn.recv(1024)
-        # except:  self.close()
+        except:  pass
         finally: self.game.force_exit()

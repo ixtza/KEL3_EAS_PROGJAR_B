@@ -2,6 +2,9 @@
 
 # Chat dkk di sini tempatnya
 # class RoomManager(threading.Thread):
+import threading
+
+
 class RoomManager():
 	def __init__(self):
 		self.players = {}
@@ -18,7 +21,7 @@ class RoomManager():
 		else:
 			if (self.gameRoomId in self.gameRoom) and len(self.gameRoom[self.gameRoomId][0]) >= 4:
 				self.gameRoomId += 1
-			self.gameRoom[self.gameRoomId] = [[player.id], [], {}, 1, False]
+			self.gameRoom[self.gameRoomId] = [[player.id], None, {}, 1, False]
 		turn = len(self.gameRoom[self.gameRoomId][0])
 
 		player.sendResponse(['your_turn', None, turn])
@@ -57,12 +60,15 @@ class RoomManager():
 		roomId = self.players.get(player.id)
 		if not roomId: return
 		roomId = roomId[1]
-		self.gameRoom[roomId][1].append(arena_config)
+		self.gameRoom[roomId][1] = arena_config
 		self.broadcastToRoom('broadcast_arena_config', arena_config, roomId, player.id)
 		print("BROADCASTED ARENA CONFIG")
 
-	def resendArenaConfig(self, player):
-		pass
+	def sendArenaConfig(self, player):
+		roomId = self.players.get(player.id)
+		if not roomId: return
+		roomId = roomId[1]
+		player.sendResponse(['broadcast_arena_config', None, self.gameRoom[roomId][1]])
 
 	def playerReady(self, player, player_is_alive):
 		roomId = self.players.get(player.id)
@@ -116,6 +122,12 @@ class RoomManager():
 		# print("send turn ")
 		pass
 
+	def syncPlayerState(self, player, state):
+		roomId = self.players.get(player.id)
+		if not roomId: return
+		roomId = roomId[1]
+		self.broadcastToRoom('sync_player_state', state, roomId, player.id)
+
 	def broadcastAction(self, player, action):
 		roomId = self.players.get(player.id)
 		if not roomId: return
@@ -124,20 +136,26 @@ class RoomManager():
 
 	def broadcastToRoom(self, kind, msg, roomId, playerId=None):
 		# playerId None = Server
-		res = [kind, playerId, msg]
-		for uid in self.gameRoom[roomId][0]:
-			if uid == playerId: continue
-			player = self.players.get(uid)
-			if not player: return
-			player = player[0]
-			player.sendResponse(res)
+		def broadcast():
+			res = [kind, playerId, msg]
+			for uid in self.gameRoom[roomId][0]:
+				if uid == playerId: continue
+				player = self.players.get(uid)
+				if not player: return
+				player = player[0]
+				player.sendResponse(res)
+
+		threading.Thread(target=broadcast).start()
 
 	def broadcastToAll(self, kind, msg, playerId=None):
 		# playerId None = Server
-		res = [kind, playerId, msg]
-		for uid in self.players:
-			if uid == playerId: continue
-			self.players[uid][0].sendResponse(res)
+		def broadcast():
+			res = [kind, playerId, msg]
+			for uid in self.players:
+				if uid == playerId: continue
+				self.players[uid][0].sendResponse(res)
+
+		threading.Thread(target=broadcast).start()
 
 	def playerMove(self, playerId, moveX, moveY):
 		roomId = self.players.get(playerId)
