@@ -6,9 +6,10 @@ class RoomManager():
 	def __init__(self):
 		self.players = {}
 
-		# [0] -> player, [1] -> arena, [2] -> player_ready, [3] -> turn, [4] -> player coordinate data
+		# [0] -> player, [1] -> arena, [2] -> player_ready, [3] -> turn, [4] -> room done
 		self.gameRoom = {}
 		self.gameRoomId = 1
+		self.asking_all_ready = False
 
 	def addPlayer(self, player):
 		self.players[player.id] = [player]
@@ -17,7 +18,7 @@ class RoomManager():
 		else:
 			if (self.gameRoomId in self.gameRoom) and len(self.gameRoom[self.gameRoomId][0]) >= 4:
 				self.gameRoomId += 1
-			self.gameRoom[self.gameRoomId] = [[player.id], [], {}, 1]
+			self.gameRoom[self.gameRoomId] = [[player.id], [], {}, 1, False]
 		turn = len(self.gameRoom[self.gameRoomId][0])
 
 		player.sendResponse(['your_turn', None, turn])
@@ -63,11 +64,11 @@ class RoomManager():
 	def resendArenaConfig(self, player):
 		pass
 
-	def playerReady(self, player):
+	def playerReady(self, player, player_is_alive):
 		roomId = self.players.get(player.id)
 		if not roomId: return
 		roomId = roomId[1]
-		self.gameRoom[roomId][2][player.id] = True
+		self.gameRoom[roomId][2][player.id] = player_is_alive
 		print("player " + player.id + " ready")
 
 	def roomReady(self, player):
@@ -81,11 +82,31 @@ class RoomManager():
 		if not roomId: return
 		roomId = roomId[1]
 		if self.roomReady(player):
+			die_count = 0
+			for p in self.gameRoom[roomId][2]:
+				if self.gameRoom[roomId][2][p] == False: die_count += 1
+
+			if die_count >= 4 and not self.gameRoom[roomId][4]:
+				self.gameRoom[roomId][4] = True
+				self.broadcastToRoom('end_game', ['all_die'], roomId)
+				return
+
 			self.gameRoom[roomId][2] = {}
 			self.gameRoom[roomId][3] += 1
 			if self.gameRoom[roomId][3] > 4: self.gameRoom[roomId][3] = 1
+			print("turn now " + str(self.gameRoom[roomId][3]))
 			self.broadcastToRoom('all_player_ready', None, roomId)
 			print("all player ready")
+
+	def askAllReady(self, player):
+		if self.asking_all_ready:
+			return
+		self.askAllReady = True
+
+		roomId = self.players.get(player.id)
+		if not roomId: return
+		roomId = roomId[1]
+		self.broadcastToRoom('player_need_ready', None, roomId, player.id)
 
 	def sendTurn(self, player):
 		roomId = self.players.get(player.id)

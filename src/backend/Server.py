@@ -52,9 +52,11 @@ class Server:
 						manager.stop()
 						self.running = False
 		except Exception as e:
-			print(e)
+			# print(e)
+			pass
+		finally:
+			self.server.shutdown(socket.SHUT_RDWR)
 			self.server.close()
-		finally: self.server.close()
 
 
 	 # close all threads

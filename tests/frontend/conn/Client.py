@@ -24,6 +24,7 @@ class Client(threading.Thread):
         self.all_player_ready = None
         self.current_player_turn_buff = None
         self.current_player_turn = None
+        self.all_goes_to_heaven = False # really sorry, got to have a bit fun in naming variable. if this got set then all player die
 
     def open_socket(self):
         self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -33,27 +34,16 @@ class Client(threading.Thread):
     def sendRequest(self, request):
         def send():
             self.conn.sendall(pickle.dumps(request))
-            print('finish send ' + str(request))
+            print('NOTICE: finish send ' + str(request))
 
         if self.running:
             threading.Thread(target=send).start()
 
     def getArenaConfig(self):
-        while not self.arena_config:
+        while not self.arena_config and self.running:
             time.sleep(0.1)
 
         return self.arena_config
-        arena_configuration = {
-				"id": None,
-				"illegal_place": [(5, 5)],
-				"players": [],
-				"loss": [],
-				"breaks": [],
-				"energys": [],
-				"num_of_breaks": 12,
-				"num_of_energys": 12,
-				"num_of_loss": 12,
-			}
 
     def getAllPlayersIdTurn(self):
         if not self.waitAllPlayers(): return
@@ -61,25 +51,28 @@ class Client(threading.Thread):
 
     def waitAllPlayers(self, delay=0.1, timeout=30):
         retry = 0
-        while len(self.connected_players) < 4:
+        while len(self.connected_players) < 4 and self.running:
             retry += 1
             time.sleep(0.1)
             if retry * delay >= timeout:
                 return False
         return True
 
-    def waitAllPlayerReady(self):
-        self.sendRequest(["player_ready", self.our_player_id, None])
+    def waitAllPlayerReady(self, player_is_alive=None):
+        self.sendRequest(["player_ready", self.our_player_id, player_is_alive])
         retry = 0
         timeout = 10
-        while not self.all_player_ready:
+        while not self.all_player_ready and not self.all_goes_to_heaven and self.running:
             retry += 1
             time.sleep(0.1 * retry)
             if 0.1 * retry >= timeout: break
 
-        while not self.all_player_ready:
+        if self.all_goes_to_heaven:
+            return
+
+        while not self.all_player_ready and self.running:
             # self.sendRequest(["ask_all_player_ready", self.our_player_id, None])
-            self.sendRequest(["player_ready", self.our_player_id, None])
+            self.sendRequest(["player_ready", self.our_player_id, player_is_alive])
             time.sleep(3)
 
         self.all_player_ready = False
@@ -125,9 +118,10 @@ class Client(threading.Thread):
 
     def close(self):
         self.running = False
-        self.conn.shutdown(socket.SHUT_RDWR)
-        self.conn.close()
-        print('client closed')
+        try:     self.conn.shutdown(socket.SHUT_RDWR)
+        except:  pass
+        finally: self.conn.close()
+        print('NOTICE: client closed')
 
     def responseHandler(self, resp):
         print(str(resp))
@@ -169,6 +163,8 @@ class Client(threading.Thread):
         elif resp[0] == "end_game":
             if resp[2][0] == "player_leave":
                 self.game.force_exit()
+            elif resp[2][0] == "all_die":
+                self.all_goes_to_heaven = True
 
     def run(self):
         self.open_socket()

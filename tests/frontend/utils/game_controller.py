@@ -26,10 +26,10 @@ class GameController:
 		# memperbaiki logic agar memasukan player id yang tidak terdapat pada list eliminsi
 		if playerid not in self.eliminated:
 			self.eliminated.append(playerid)
-			print("Player "+str(playerid)+" gets a break!")
+			print("NOTICE: Player "+str(playerid)+" gets a break!")
 
 	def addRunOutOfPoints(self, playerid):
 		# memperbaiki logic agar memasukan player id yang tidak terdapat pada list eliminsi
 		if playerid not in self.eliminated:
 			self.eliminated.append(playerid)
-			print("Player "+str(playerid)+" has run out of points.")
+			print("NOTICE: Player "+str(playerid)+" has run out of points.")

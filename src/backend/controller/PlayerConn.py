@@ -66,12 +66,14 @@ class PlayerConn(threading.Thread):
 			self.roomManager.addArenaConfig(self, req[2])
 			self.sendResponse(['broadcast_arena_config_done', None, None])
 		elif req[0] == "player_ready":
-			self.roomManager.playerReady(self)
+			self.roomManager.playerReady(self, req[2])
 			self.roomManager.sendAllPlayerReady(self)
 		elif req[0] == "get_turn":
 			self.roomManager.sendTurn(self)
 		elif req[0] == "broadcast_player_action":
 			self.roomManager.broadcastAction(self, req[2])
+		elif req[0] == "ask_all_player_ready":
+			self.roomManager.askAllReady(self)
 
 	def run(self):
 		self.running = True

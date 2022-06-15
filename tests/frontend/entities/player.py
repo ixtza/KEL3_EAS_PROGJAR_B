@@ -37,8 +37,8 @@ class Player(pygame.sprite.Sprite):
 		self.is_alive = True
 
 		# point
-		# self.point = 5
-		self.point = 2
+		self.point = 5
+			
 
 		self.load_sprites()
 
@@ -50,19 +50,19 @@ class Player(pygame.sprite.Sprite):
 	def isOutsideArea(self):
 		if self.x + self.newX < 0:
 			self.x = 0
-			print("Invalid Move")
+			print("NOTICE: Invalid Move")
 			return True
 		if self.x + self.newX > 320:
 			self.x = 320
-			print("Invalid Move")
+			print("NOTICE: Invalid Move")
 			return True
 		if self.y + self.newY < 0:
 			self.y = 0
-			print("Invalid Move")
+			print("NOTICE: Invalid Move")
 			return True
 		if self.y + self.newY > 320:
 			self.y = 320
-			print("Invalid Move")
+			print("NOTICE: Invalid Move")
 			return True
 		return False
 
@@ -95,15 +95,12 @@ class Player(pygame.sprite.Sprite):
 		return image
 
 	def update(self, deltaTime, actions, players):
-		# print("update for " + str(self.turn))
-		self.LOGS[str((self.turn, self.moving, self.doing_server_movement))] = True
-		# print(self.LOGS)
-		if self.is_alive or actions['keyup']:
+		if self.is_alive:
 			change = self.check_movement(actions)
 			self.check_collision(players)
 			self.animate(deltaTime)
 			return change
-		if self.is_alive is False:
+		if self.is_alive == False:
 			self.animMode = 0
 			self.currentFrame = 0
 			self.point = 0
@@ -123,17 +120,6 @@ class Player(pygame.sprite.Sprite):
 			self.is_alive = False
 
 	def check_movement(self, actions, from_server=False):
-		if not actions['keyup'] and (not self.is_alive or self.point <= 0): return
-		# print("check movement: " + str((self.turn, self.is_alive)))
-
-		"""
-		Jika bukan turn dan fungsi dipanggil dari main loop,
-		kembalikan status change dari nilai doing_server_movement
-		"""
-		# if self.conn.our_player_turn != self.turn and not from_server:
-		# 	print(str(self.turn) + ": turn from server")
-		# else:
-		# 	print("your turn: " + str(self.turn))
 
 		if (self.conn.our_player_turn == self.turn or from_server) and actions['keydown'] == True and self.moving == False and self.is_turn == False:
 			self.moving = True
@@ -141,19 +127,19 @@ class Player(pygame.sprite.Sprite):
 			if actions['left'] == True:
 				self.facing = 'left'
 				self.animMode = 2
-				self.newX = -32
+				self.newX -= 32
 			elif actions['right'] == True:
 				self.facing = 'right'
 				self.animMode = 3
-				self.newX = 32
+				self.newX += 32
 			elif actions['up'] == True:
 				self.facing = 'up'
 				self.animMode = 1
-				self.newY = -32
+				self.newY -= 32
 			elif actions['down'] == True:
 				self.facing = 'down'
 				self.animMode = 4
-				self.newY = 32
+				self.newY += 32
 			if self.isOutsideArea():
 				self.newX = 0
 				self.newY = 0
@@ -161,24 +147,21 @@ class Player(pygame.sprite.Sprite):
 			self.is_turn = True
 			self.point -= 1
 
+			if self.conn.our_player_turn == self.turn and self.facing != None:
+				self.conn.sendAction(self.facing)
 			return False
 
-			# elif not from_server: return True
 
-		if (actions['keyup'] == True or self.doing_server_movement) and self.moving == False:
+		if (actions['keyup'] == True or self.doing_server_movement or self.is_alive == False) and self.moving == False:
 			"""
 			Setelah melepas tombol gerakan, kirim data gerakan ke seluruh pemain
 			"""
-			if self.conn.our_player_turn == self.turn and self.facing != None:
-				self.conn.sendAction(self.facing)
 
 			self.doing_server_movement = False
 			self.facing = None
 			self.newX = 0
 			self.newY = 0
 			if self.is_turn == True:
-				# To be sent to server that the turn is finish
-				# memanggil fungsi is alive guna mengecek apakah masih bisa bermain untuk giliran selanjutnya
 				self.alive()
 				self.is_turn = False
 				return True
@@ -196,13 +179,13 @@ class Player(pygame.sprite.Sprite):
 		collisions = self.get_hits(players)
 		for tile in collisions:
 			if self.facing == 'right':
-				self.newX = -1
+				self.newX -= 32
 			elif self.facing == 'left':
-				self.newX = +1
+				self.newX += 32
 			elif self.facing == 'up':
-				self.newY = +1
+				self.newY += 32
 			elif self.facing == 'down':
-				self.newY = -1
+				self.newY -= 32
 
 	def animate(self, deltaTime):
 		# Compute how much time has passed since the frame last updated

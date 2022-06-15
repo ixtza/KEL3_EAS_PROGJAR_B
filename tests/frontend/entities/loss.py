@@ -23,7 +23,6 @@ class Loss(pygame.sprite.Sprite):
 			# cek ketika sudah di koordinatnya
 			if player.is_alive and player.x == self.x and player.y == self.y:
 				self.is_passed = True
-				print(player.id)
 				# if self.rect.colliderect(player.rect):
 				hits.append(player)
 		return hits
@@ -32,6 +31,7 @@ class Loss(pygame.sprite.Sprite):
 		entities = self.get_hits(players)
 		for entity in entities:
 			entity.is_alive = False
+			print("NOTICE: " + str(entity.turn) + " got instant death")
 
 	def update(self, players):
 		self.check_collision(players)

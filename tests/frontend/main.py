@@ -6,8 +6,3 @@ if __name__ == "__main__":
 	g.game_loop()
 	# threading.Thread(target=g.game_loop()).start()
 	# while g.running:
-
-"""
-TODO
-Saat mati, dia tidak dikirim datanya, yang lain jadi stuck
-"""
