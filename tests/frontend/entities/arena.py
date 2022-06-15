@@ -85,8 +85,14 @@ class Arena():
 		self.frame = 0
 
 		# socre board text position
-		self.text = Text(os.path.join(self.game.font_dir, "PressStart2P-vaV7.ttf"),13)
-		self.Ytext = 0
+		self.text = Text(os.path.join(self.game.font_dir, "ROCK.ttf"),14)
+
+		# finish line
+		self.finishLine = (160,160)
+		self.finish = False
+
+		# set window title
+		pygame.display.set_caption('Player ' + str(self.conn.our_player_turn))
 
 	# update sebagai pengatur nilai object (letak, dls)
 	def update(self, delta_time, actions):
@@ -121,11 +127,31 @@ class Arena():
 				if len(self.game_controller.getEliminated()) == 4:
 					print('NOTICE: permainan berakhir, seluruh pemain kecapaian')
 					self.game.force_exit()
+			# cek apakah player sekarang sudah mencapai lokasi finish, jika iya permainan berakhir
 
-			# Kirim flag apapun ke server, menandakan player turn harus berubah
-			# ...
-			# print("kirim ke server pergerakan selesai")
+			if self.check_finish(self.players[self.playerTurn]):
+				print('Player '+str(self.players[self.playerTurn].id)+' menang!')
+				for player in self.players:
+					player.is_alive = False
+			else:
+				print(self.playerTurn)
+				self.game_controller.nextturn()
+				self.playerTurn = self.game_controller.getturn()
+				if self.players[self.playerTurn].is_alive == False:
+					self.game_controller.addEliminated(self.players[self.playerTurn].id)
+					if len(self.game_controller.getEliminated()) == 4:
+						print('permainan berakhir')
 
+				# Kirim flag apapun ke server, menandakan player turn harus berubah
+				# ...
+				# print("kirim ke server pergerakan selesai")
+
+	# finish sebagai salah satu cara akhir dari permainan
+	def check_finish(self, player):
+		if (player.x, player.y) == self.finishLine:
+			self.finish = True
+		return self.finish
+	
 	# render sebagai hasil visual terhadap update object
 	def render(self, display):
 		display.blit(self.arena_img, (0,0))
@@ -141,7 +167,10 @@ class Arena():
 
 		for player in self.players:
 			player.render(display)
-			self.text.render(display, "P-" + str(player.turn) + " Score :" + str(player.getPoint()),440, (player.turn+1) * 15)
+			self.text.render(display, "P-" + str(player.turn) + " Score :" + str(player.getPoint()),440, (player.turn+1) * 15 + 25)
+		
+		# for player in self.players:
+		# 	self.text.render(display, "P-" + str(player.getId()) + " Score :" + str(player.getPoint()),420, ((player.getId()+1) * 15)+25)
 
 	# generate energy and breakas
 	def generate_map(self):

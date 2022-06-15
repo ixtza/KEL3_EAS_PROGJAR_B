@@ -12,6 +12,10 @@ class Game():
 		self.GAME_W,self.GAME_H = 528, 416
 		# self.SCREEN_W,self.SCREEN_H = 800, 600
 		self.SCREEN_W,self.SCREEN_H = 528, 416
+
+		# self.GAME_W,self.GAME_H = 488, 416
+		# self.SCREEN_W,self.SCREEN_H = 800, 600
+
 		self.game_canvas = pygame.Surface((self.GAME_W,self.GAME_H))
 		self.display = pygame.display.set_mode((self.SCREEN_W,self.SCREEN_H))
 		self.running, self.playing = True, True

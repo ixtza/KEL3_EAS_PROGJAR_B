@@ -8,7 +8,7 @@ class Text:
 		self.text = None
 
 	def render(self, display, text, x, y):
-		self.text = self.font.render(text, True, (255, 0, 0))
+		self.text = self.font.render(text, True, (0, 0, 0))
 		textRect = self.text.get_rect()
 		textRect.center = (x, y)
 		display.blit(self.text, textRect)
