@@ -90,6 +90,7 @@ class Arena():
 		# finish line
 		self.finishLine = (160,160)
 		self.finish = False
+		self.ongoing = True
 
 		# set window title
 		pygame.display.set_caption('Player ' + str(self.conn.our_player_turn))
@@ -106,13 +107,13 @@ class Arena():
 			self.loss[i].update(self.players)
 
 		self.changeTurn = self.players[self.playerTurn].update(delta_time,actions,self.players)
-		if self.changeTurn:
-			# os.system('clear')
-			print("NOTICE: Current Turn: "+ str(self.playerTurn+1) +"\nCurrent score status: \n" + str(self.players[self.playerTurn].getPoint())
-			                    # 'Player '+ str(self.players[0].id) + ' :' + str(self.players[0].getPoint()) + '-' + str(self.players[0].is_alive) + "\n"
-			                    # 'Player '+ str(self.players[1].id) + ' :' + str(self.players[1].getPoint()) + '-' + str(self.players[1].is_alive) + "\n"
-			                    # 'Player '+ str(self.players[2].id) + ' :' + str(self.players[2].getPoint()) + '-' + str(self.players[2].is_alive) + "\n"
-			                    # 'Player '+ str(self.players[3].id) + ' :' + str(self.players[3].getPoint()) + '-' + str(self.players[3].is_alive) 
+		if self.changeTurn and self.ongoing:
+			os.system('cls')
+			print("Current Turn: "+ str(self.playerTurn+1) +"\nCurrent score status: \n"
+			                    'Player '+ str(self.players[0].id) + ' :' + str(self.players[0].getPoint()) + '-' + str(self.players[0].is_alive) + "\n"
+			                    'Player '+ str(self.players[1].id) + ' :' + str(self.players[1].getPoint()) + '-' + str(self.players[1].is_alive) + "\n"
+			                    'Player '+ str(self.players[2].id) + ' :' + str(self.players[2].getPoint()) + '-' + str(self.players[2].is_alive) + "\n"
+			                    'Player '+ str(self.players[3].id) + ' :' + str(self.players[3].getPoint()) + '-' + str(self.players[3].is_alive) 
 			)
 			# mengganti turn player, ketika is_alive player false, maka akan langsung otomastis switch ke giliran selanjutnya
 
@@ -133,6 +134,8 @@ class Arena():
 				print('Player '+str(self.players[self.playerTurn].id)+' menang!')
 				for player in self.players:
 					player.is_alive = False
+				# kirim tanda apapun bahwa game telah berakhir
+				# ...
 			else:
 				print(self.playerTurn)
 				self.game_controller.nextturn()
@@ -150,6 +153,7 @@ class Arena():
 	def check_finish(self, player):
 		if (player.x, player.y) == self.finishLine:
 			self.finish = True
+			self.ongoing = False
 		return self.finish
 	
 	# render sebagai hasil visual terhadap update object
