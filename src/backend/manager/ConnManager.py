@@ -1,7 +1,7 @@
 import threading
 import pickle
 from io import BytesIO
-from PlayerConn import PlayerConn
+from ..controller.PlayerConn import PlayerConn
 from RoomManager import RoomManager
 
 class ConnManager():

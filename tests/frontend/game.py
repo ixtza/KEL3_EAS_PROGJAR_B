@@ -35,6 +35,9 @@ class Game():
 		# load states
 		self.load_states()
 
+		# load pygame clock
+		self.clock = pygame.time.Clock()
+
 	def game_loop(self):
 		while self.playing:
 			self.get_dt()
@@ -44,6 +47,7 @@ class Game():
 
 	def get_events(self):
 		for event in pygame.event.get():
+			self.clock.tick(60)
 			if event.type == pygame.QUIT:
 				self.playing = False
 				self.running = False
