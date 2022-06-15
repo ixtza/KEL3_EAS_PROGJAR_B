@@ -47,8 +47,10 @@ players.append(Player.Player(pygame.image.load(
     work_dir+"/assets/model/model_move.png").convert_alpha(), 3, 320, 320))
 
 #trap marker
-break_marker = False
-loss_marker = False
+GotBreak_marker = False
+GotLoss_marker = False
+NearBreak_marker = False
+NearLoss_marker = False
 
 #text
 text = Text.Text(work_dir+"/assets/fonts/ROCK.TTF", 14)
@@ -95,31 +97,36 @@ while running:
          )
 
 			#check for break, energy, and finish
-			break_marker = False
-			loss_marker = False
+			GotBreak_marker = False
+			GotLoss_marker = False
+			NearBreak_marker = False
+			NearLoss_marker = False
 			savePlayerId_GotBreak = 0
 			savePlayerId_GotLoss = 0
+			savePlayerId_NearBreak = 0
+			savePlayerId_NearLoss = 0
 
 			for brk in arena.getBreaks():
 				if player.getX() == brk.getX() and player.getY() == brk.getY():
 					gamecontroller.addEliminated(gamecontroller.getturn())
-					text.print(screen, "Player " + str(player.id + 1) + " gets a break!", 250, 470)
+					savePlayerId_GotBreak = player.id + 1
+					GotBreak_marker = True
 				if player.getX() == brk.getX() - 32 and player.getY() == brk.getY() - 32:
-					print("Warning! There's a break near you, Player " + str(player.id + 1) + "!")
-					savePlayerId_GotBreak = player.id + 1
-					break_marker = True
+					print("There's a break near Player " + str(player.id + 1) + "!")
+					savePlayerId_NearBreak = player.id + 1
+					NearBreak_marker = True
 				if player.getX() == brk.getX() - 32 and player.getY() == brk.getY() + 32:
-					print("Warning! There's a break near you, Player " + str(player.id + 1) + "!")
-					savePlayerId_GotBreak = player.id + 1
-					break_marker = True
+					print("There's a break near Player " + str(player.id + 1) + "!")
+					savePlayerId_NearBreak = player.id + 1
+					NearBreak_marker = True
 				if player.getX() == brk.getX() + 32 and player.getY() == brk.getY() - 32:
-					print("Warning! There's a break near you, Player " + str(player.id + 1) + "!")
-					savePlayerId_GotBreak = player.id + 1
-					break_marker = True
+					print("There's a break near Player " + str(player.id + 1) + "!")
+					savePlayerId_NearBreak = player.id + 1
+					NearBreak_marker = True
 				if player.getX() == brk.getX() + 32 and player.getY() == brk.getY() + 32:
-					print("Warning! There's a break near you, Player " + str(player.id + 1) + "!")
-					savePlayerId_GotBreak = player.id + 1
-					break_marker = True
+					print("There's a break near Player " + str(player.id + 1) + "!")
+					savePlayerId_NearBreak = player.id + 1
+					NearBreak_marker = True
 			for energy in arena.getEnergys():
 				if player.getX() == energy.getX() and player.getY() == energy.getY():
 					point = 8
@@ -130,23 +137,24 @@ while running:
 					point = -3
 					player.setPoint(player.getPoint() + point)
 					print("Player " + str(player.id + 1) + " get " + str(point) + " loss.")
-					text.print(screen, "Player " + str(player.id + 1) + " get " + str(point) + " loss.", 250, 485)
+					savePlayerId_GotLoss = player.id + 1
+					GotLoss_marker = True
 				if player.getX() == loss.getX() - 32 and player.getY() == loss.getY():
-					print("Caution! There's a loss near you, Player " + str(player.id + 1) + "!")
-					savePlayerId_GotLoss = player.id + 1
-					loss_marker = True
+					print("There's a loss near Player " + str(player.id + 1) + "!")
+					savePlayerId_NearLoss = player.id + 1
+					NearLoss_marker = True
 				if player.getX() == loss.getX() and player.getY() == loss.getY() + 32:
-					print("Caution! There's a loss near you, Player " + str(player.id + 1) + "!")
-					savePlayerId_GotLoss = player.id + 1
-					loss_marker = True
+					print("There's a loss near Player " + str(player.id + 1) + "!")
+					savePlayerId_NearLoss = player.id + 1
+					NearLoss_marker = True
 				if player.getX() == loss.getX() + 32 and player.getY() == loss.getY():
-					print("Caution! There's a loss near you, Player " + str(player.id + 1) + "!")
-					savePlayerId_GotLoss = player.id + 1
-					loss_marker = True
+					print("There's a loss near Player " + str(player.id + 1) + "!")
+					savePlayerId_NearLoss = player.id + 1
+					NearLoss_marker = True
 				if player.getX() == loss.getX() and player.getY() == loss.getY() - 32:
-					print("Caution! There's a loss near you, Player " + str(player.id + 1) + "!")
-					savePlayerId_GotLoss = player.id + 1
-					loss_marker = True
+					print("There's a loss near Player " + str(player.id + 1) + "!")
+					savePlayerId_NearLoss = player.id + 1
+					NearLoss_marker = True
 			if player.getX() == 160 and player.getY() == 160:
 				gamecontroller.addEliminated(gamecontroller.getturn())
 
@@ -180,9 +188,13 @@ while running:
 
 	text.print(screen, "Player " + str(gamecontroller.getturn() + 1) + "'s Turn", 250, 425)
 	
-	if break_marker == True:
-		text.print(screen, "Break near Player " + str(savePlayerId_GotBreak), 250, 440)
-	if loss_marker == True:
-		text.print(screen, "Loss near Player " + str(savePlayerId_GotLoss), 250, 455)
+	if NearBreak_marker == True:
+		text.print(screen, "There's a break near Player " + str(savePlayerId_NearBreak) + "!", 250, 440)
+	if NearLoss_marker == True:
+		text.print(screen, "There's a loss near Player " + str(savePlayerId_NearLoss) + "!", 250, 455)
+	if GotBreak_marker == True:
+		text.print(screen, "Player " + str(savePlayerId_GotBreak) + " gets a break!", 250, 470)
+	if GotLoss_marker == True:
+		text.print(screen, "Player " + str(savePlayerId_GotLoss) + " get " + str(point) + " loss.", 250, 485)
 
 	pygame.display.update()
