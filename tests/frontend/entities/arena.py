@@ -44,6 +44,7 @@ class Arena():
 		# finish line
 		self.finishLine = (160,160)
 		self.finish = False
+		self.ongoing = True
 
 	# update sebagai pengatur nilai object (letak, dls)
 	def update(self, delta_time, actions):
@@ -57,7 +58,7 @@ class Arena():
 			self.loss[i].update(self.players)
 
 		self.changeTurn = self.players[self.playerTurn].update(delta_time,actions,self.players)
-		if self.changeTurn:
+		if self.changeTurn and self.ongoing:
 			os.system('cls')
 			print("Current Turn: "+ str(self.playerTurn+1) +"\nCurrent score status: \n"
 			                    'Player '+ str(self.players[0].id) + ' :' + str(self.players[0].getPoint()) + '-' + str(self.players[0].is_alive) + "\n"
@@ -73,6 +74,8 @@ class Arena():
 				print('Player '+str(self.players[self.playerTurn].id)+' menang!')
 				for player in self.players:
 					player.is_alive = False
+				# kirim tanda apapun bahwa game telah berakhir
+				# ...
 			else:
 				print(self.playerTurn)
 				self.game_controller.nextturn()
@@ -90,6 +93,7 @@ class Arena():
 	def check_finish(self, player):
 		if (player.x, player.y) == self.finishLine:
 			self.finish = True
+			self.ongoing = False
 		return self.finish
 	
 	# render sebagai hasil visual terhadap update object
