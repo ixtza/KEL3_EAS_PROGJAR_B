@@ -90,7 +90,7 @@ class Arena():
 
 		for player in self.players:
 			player.render(display)
-			self.text.print(display, "P-" + str(player.getId()) + " Score :" + str(player.getPoint()),440, (player.getId()+1) * 15)
+			self.text.render(display, "P-" + str(player.getId()) + " Score :" + str(player.getPoint()),440, (player.getId()+1) * 15)
 
 	# generate energy and breakas
 	def generate_map(self):

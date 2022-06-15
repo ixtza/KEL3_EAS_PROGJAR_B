@@ -7,7 +7,7 @@ class Text:
 		self.font = pygame.font.Font(font, size)
 		self.text = None
 
-	def print(self, display, text, x, y):
+	def render(self, display, text, x, y):
 		self.text = self.font.render(text, True, (255, 0, 0))
 		textRect = self.text.get_rect()
 		textRect.center = (x, y)
