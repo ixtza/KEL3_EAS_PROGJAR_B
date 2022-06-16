@@ -37,7 +37,7 @@ class Player(pygame.sprite.Sprite):
 		self.is_alive = True
 
 		# point
-		self.point = 99999
+		self.point = 5
 			
 
 		self.load_sprites()
@@ -155,27 +155,33 @@ class Player(pygame.sprite.Sprite):
 			self.moving = True
 			if from_server: self.doing_server_movement = True
 			if actions['left'] == True:
+				self.point -= 1
 				self.facing = 'left'
 				self.animMode = 2
 				self.newX -= 32
 			elif actions['right'] == True:
+				self.point -= 1
 				self.facing = 'right'
 				self.animMode = 3
 				self.newX += 32
 			elif actions['up'] == True:
+				self.point -= 1
 				self.facing = 'up'
 				self.animMode = 1
 				self.newY -= 32
 			elif actions['down'] == True:
+				self.point -= 1
 				self.facing = 'down'
 				self.animMode = 4
 				self.newY += 32
 			if self.isOutsideArea():
+				self.point += 1
 				self.newX = 0
 				self.newY = 0
+				self.is_turn = False
 				return False
+
 			self.is_turn = True
-			self.point -= 1
 
 			if self.conn.our_player_turn == self.turn and self.facing != None:
 				self.conn.sendAction(self.facing)

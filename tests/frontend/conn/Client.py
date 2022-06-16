@@ -34,16 +34,17 @@ class Client(threading.Thread):
     def sendRequest(self, request):
         def send():
             self.conn.sendall(pickle.dumps(request))
-            print('NOTICE: finish send ' + str(request))
+            # print('NOTICE: finish send ' + str(request))
 
         if self.running:
             threading.Thread(target=send).start()
 
     def getArenaConfig(self):
         retry = 0
-        delay = 0.1
-        timeout = 5
+        delay = 1
+        timeout = 10
         while not self.arena_config and self.running:
+            self.game.clock.tick(60)
             retry += 1
             time.sleep(retry * delay)
             if retry * delay >= timeout:
@@ -56,11 +57,12 @@ class Client(threading.Thread):
         if not self.waitAllPlayers(): return
         return self.connected_players
 
-    def waitAllPlayers(self, delay=0.1, timeout=30):
+    def waitAllPlayers(self, delay=1, timeout=30):
         retry = 0
         while len(self.connected_players) < 4 and self.running:
+            self.game.clock.tick(60)
             retry += 1
-            time.sleep(0.1)
+            time.sleep(delay)
             if retry * delay >= timeout:
                 return False
         return True
@@ -70,14 +72,17 @@ class Client(threading.Thread):
         retry = 0
         timeout = 10
         while not self.all_player_ready and not self.all_goes_to_heaven and self.running:
+            pygame.event.get()
+            self.game.clock.tick(60)
             retry += 1
-            time.sleep(0.1 * retry)
-            if 0.1 * retry >= timeout: break
+            time.sleep(1 * retry)
+            if 1 * retry >= timeout: break
 
         if self.all_goes_to_heaven:
             return
 
         while not self.all_player_ready and self.running:
+            self.game.clock.tick(60)
             # self.sendRequest(["ask_all_player_ready", self.our_player_id, None])
             self.sendRequest(["player_ready", self.our_player_id, player_is_alive])
             time.sleep(3)
@@ -107,6 +112,7 @@ class Client(threading.Thread):
     def getTurn(self, current_turn):
         self.sendRequest(["get_turn", None, None])
         while not self.current_player_turn_buff and self.running:
+            self.game.clock.tick(60)
             time.sleep(0.1)
 
         if self.current_player_turn_buff == 0 and self.running:
@@ -134,7 +140,7 @@ class Client(threading.Thread):
         print('NOTICE: client closed')
 
     def responseHandler(self, resp):
-        print(str(resp))
+        # print(str(resp))
         if resp[0] == "your_id":
             self.our_player_id = resp[2]
             self.connected_players[self.our_player_id] = {}

@@ -13,7 +13,8 @@ class Break(pygame.sprite.Sprite):
 
 		# collision
 		self.rect = pygame.Rect(x, y, 32, 32)
-		self.is_passed = False
+		# self.is_passed = False
+		self.is_passed = True
 
 	def getX(self):
 		return self.x

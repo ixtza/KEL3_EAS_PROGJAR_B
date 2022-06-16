@@ -23,12 +23,12 @@ class Arena():
 				"loss": None,
 				"breaks": None,
 				"energys": None,
-				"num_of_breaks": 0,
-				"num_of_energys": 0,
-				"num_of_loss": 0,
-				# "num_of_breaks": 12,
-				# "num_of_energys": 12,
-				# "num_of_loss": 12,
+				# "num_of_breaks": 0,
+				# "num_of_energys": 0,
+				# "num_of_loss": 0,
+				"num_of_breaks": 12,
+				"num_of_energys": 12,
+				"num_of_loss": 12,
 			}
 
 		# id game buat unique untuk server nanti
@@ -88,7 +88,6 @@ class Arena():
 		self.text = Text(os.path.join(self.game.font_dir, "ROCK.ttf"),14)
 
 		# finish line
-		self.finishLine = (160,160)
 		self.finish = False
 		self.ongoing = True
 
@@ -111,38 +110,20 @@ class Arena():
 
 		self.changeTurn = self.players[self.playerTurn].update(delta_time,actions,self.players)
 		if self.changeTurn and self.ongoing:
-			os.system('cls')
-			print("Current Turn: "+ str(self.playerTurn+1) +"\nCurrent score status: \n"
-			                    'Player '+ str(self.players[0].id) + ' :' + str(self.players[0].getPoint()) + '-' + str(self.players[0].is_alive) + "\n"
-			                    'Player '+ str(self.players[1].id) + ' :' + str(self.players[1].getPoint()) + '-' + str(self.players[1].is_alive) + "\n"
-			                    'Player '+ str(self.players[2].id) + ' :' + str(self.players[2].getPoint()) + '-' + str(self.players[2].is_alive) + "\n"
-			                    'Player '+ str(self.players[3].id) + ' :' + str(self.players[3].getPoint()) + '-' + str(self.players[3].is_alive) 
-			)
-			# mengganti turn player, ketika is_alive player false, maka akan langsung otomastis switch ke giliran selanjutnya
+			# os.system('cls')
+			# print("Current Turn: "+ str(self.playerTurn+1) +"\nCurrent score status: \n"
+			#                     'Player '+ str(self.players[0].id) + ' :' + str(self.players[0].getPoint()) + '-' + str(self.players[0].is_alive) + "\n"
+			#                     'Player '+ str(self.players[1].id) + ' :' + str(self.players[1].getPoint()) + '-' + str(self.players[1].is_alive) + "\n"
+			#                     'Player '+ str(self.players[2].id) + ' :' + str(self.players[2].getPoint()) + '-' + str(self.players[2].is_alive) + "\n"
+			#                     'Player '+ str(self.players[3].id) + ' :' + str(self.players[3].getPoint()) + '-' + str(self.players[3].is_alive) 
+			# )
 
-			print("NOTICE: this player ready")
-			# self.conn.sendReady()
-			self.conn.waitAllPlayerReady(self.players[self.conn.our_player_turn - 1].is_alive)
-			print("NOTICE: all player ready")
-			self.playerTurn = self.game_controller.getturn()
-
-			if self.playerTurn+1 == self.conn.our_player_turn:
-				print("NOTICE: your turn")
-				pygame.display.set_caption('Tap Treasure - Player ' + str(self.conn.our_player_turn) + " - Your Turn")
-			else:
-				pygame.display.set_caption('Tap Treasure - Player ' + str(self.conn.our_player_turn))
-
-			if self.players[self.playerTurn].is_alive == False:
-				self.game_controller.addEliminated(self.players[self.playerTurn].turn)
-				if len(self.game_controller.getEliminated()) == 4:
-					print('NOTICE: permainan berakhir, seluruh pemain kecapaian')
-					self.game.force_exit()
-			# cek apakah player sekarang sudah mencapai lokasi finish, jika iya permainan berakhir
+# cek apakah player sekarang sudah mencapai lokasi finish, jika iya permainan berakhir
 
 			if self.check_finish(self.players[self.playerTurn]):
 				print('Player '+str(self.players[self.playerTurn].id)+' menang!')
 				if self.playerTurn+1 == self.conn.our_player_turn:
-					print("NOTICE: your turn")
+					print("NOTICE: your win")
 					pygame.display.set_caption('Tap Treasure - Player ' + str(self.conn.our_player_turn) + " - You Win")
 				for player in self.players:
 					player.is_alive = False
@@ -150,20 +131,42 @@ class Arena():
 				# ...
 			else:
 				print(self.playerTurn)
-				self.game_controller.nextturn()
 				self.playerTurn = self.game_controller.getturn()
 				if self.players[self.playerTurn].is_alive == False:
 					self.game_controller.addEliminated(self.players[self.playerTurn].id)
 					if len(self.game_controller.getEliminated()) == 4:
+						self.ongoing = False
+						pygame.display.set_caption('Tap Treasure - Player ' + str(self.conn.our_player_turn) + " - Draw")
 						print('permainan berakhir')
 
 				# Kirim flag apapun ke server, menandakan player turn harus berubah
 				# ...
 				# print("kirim ke server pergerakan selesai")
 
+			# mengganti turn player, ketika is_alive player false, maka akan langsung otomastis switch ke giliran selanjutnya
+			if self.playerTurn+1 == self.conn.our_player_turn:
+				print((self.players[self.playerTurn].x, self.players[self.playerTurn].y))
+			print("NOTICE: this player ready")
+			# self.conn.sendReady()
+			self.conn.waitAllPlayerReady(self.players[self.conn.our_player_turn - 1].is_alive)
+			print("NOTICE: all player ready")
+			self.playerTurn = self.game_controller.getturn()
+
+			if self.playerTurn+1 == self.conn.our_player_turn and self.ongoing:
+				print("NOTICE: your turn")
+				pygame.display.set_caption('Tap Treasure - Player ' + str(self.conn.our_player_turn) + " - Your Turn")
+			elif self.ongoing:
+				pygame.display.set_caption('Tap Treasure - Player ' + str(self.conn.our_player_turn))
+
+			# if self.players[self.playerTurn].is_alive == False:
+			# 	self.game_controller.addEliminated(self.players[self.playerTurn].turn)
+			# 	if len(self.game_controller.getEliminated()) == 4:
+			# 		print('NOTICE: permainan berakhir, seluruh pemain kecapaian')
+			# 		self.game.force_exit()
+			
 	# finish sebagai salah satu cara akhir dari permainan
 	def check_finish(self, player):
-		if (player.x, player.y) == self.finishLine:
+		if player.x in range(159,192) and player.y in range(159,192):
 			self.finish = True
 			self.ongoing = False
 		return self.finish

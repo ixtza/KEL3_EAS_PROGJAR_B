@@ -52,6 +52,7 @@ class Game():
 	def game_loop(self):
 		self.conn.start()
 		while self.playing:
+			self.clock.tick(60)
 			self.get_dt()
 			self.get_events()
 			self.render()
@@ -65,6 +66,7 @@ class Game():
 				self.running = False
 				self.force_exit()
 			if event.type == pygame.KEYDOWN:
+				print(event)
 				self.actions['keyup'] = False
 				self.actions['keydown'] = True
 				if event.key == pygame.K_ESCAPE:
