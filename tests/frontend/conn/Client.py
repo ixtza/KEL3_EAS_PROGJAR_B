@@ -41,7 +41,7 @@ class Client(threading.Thread):
 
     def getArenaConfig(self):
         retry = 0
-        delay = 1
+        delay = 0.1
         timeout = 10
         while not self.arena_config and self.running:
             self.game.clock.tick(60)
@@ -57,7 +57,7 @@ class Client(threading.Thread):
         if not self.waitAllPlayers(): return
         return self.connected_players
 
-    def waitAllPlayers(self, delay=1, timeout=30):
+    def waitAllPlayers(self, delay=0.1, timeout=30):
         retry = 0
         while len(self.connected_players) < 4 and self.running:
             self.game.clock.tick(60)
@@ -75,7 +75,7 @@ class Client(threading.Thread):
             pygame.event.get()
             self.game.clock.tick(60)
             retry += 1
-            time.sleep(1 * retry)
+            time.sleep(0.1 * retry)
             if 1 * retry >= timeout: break
 
         if self.all_goes_to_heaven:
